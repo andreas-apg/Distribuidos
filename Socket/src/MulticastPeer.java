@@ -1,22 +1,31 @@
 import java.net.*;
 import java.security.interfaces.DSAPrivateKey;
+import java.util.ArrayList;
 import java.io.*;
 
 public class MulticastPeer extends Thread {
 	private static int idCounter = 0;
     private MulticastSocket sock;
-    public int port;    
-    public int id;
-    public String user;
-    public InetAddress group;
-    public String ip;
+    private int port;    
+    private int id;
+    private String user;
+    private InetAddress group;
+    private String ip;
     private Thread thread;
     private Boolean keepAlive = true;
+    private static ArrayList<String> userList = new ArrayList<String>();
     
-    public void connect(String ip, int port, String user) {
-    	this.ip = ip;
+    //class constructor for MulticastPeer
+    public MulticastPeer(String group, int port, String user){
+    	// the group proper will be set by InetAddress.getByName using the string, later
+    	this.ip = group;
     	this.port = port;
     	this.user = user;
+    	connect();
+    }
+    
+    // connects user to the group and adds them to the list of connected users
+    private void connect() {
     	idCounter++;
     	id = idCounter;
         try {
