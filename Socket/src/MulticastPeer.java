@@ -21,11 +21,10 @@ public class MulticastPeer extends Thread {
     	this.ip = group;
     	this.port = port;
     	this.user = user;
-    	connect();
     }
     
     // connects user to the group and adds them to the list of connected users
-    private void connect() {
+    public void connect() {
     	idCounter++;
     	id = idCounter;
         try {
@@ -47,8 +46,8 @@ public class MulticastPeer extends Thread {
             try {
                 byte[] msg = message.getBytes();
                 DatagramPacket messageOut = new DatagramPacket(msg, msg.length, group, port);
-                sock.send(messageOut);
                 System.out.printf("<< Peer %s sending: %s\n", id, message);
+                sock.send(messageOut);                
             } catch (IOException e) {
                 System.out.println("IO: " + e.getMessage());
             }
@@ -101,7 +100,7 @@ public class MulticastPeer extends Thread {
     	while(keepAlive) {
     		String received = listenToGroup();
     		if(received != null) {
-    			System.out.printf(">> Peer %s received: %s\n", id, received);
+    			System.out.printf(">> Peer %s received: %s\n", user, received);
     		}
     		
     	}
