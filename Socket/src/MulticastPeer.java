@@ -1,6 +1,6 @@
 import java.net.*;
-import java.security.interfaces.DSAPrivateKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.io.*;
 
 public class MulticastPeer extends Thread {
@@ -41,12 +41,12 @@ public class MulticastPeer extends Thread {
         }
     }
     
-    public void send(String message) {
+    public void send(Message message) {
     	if(sock != null) {
             try {
-                byte[] msg = message.getBytes();
+                byte[] msg = message.toString().getBytes();
                 DatagramPacket messageOut = new DatagramPacket(msg, msg.length, group, port);
-                System.out.printf("<< Peer %s sending: %s\n", id, message);
+                System.out.printf("<< Peer %s sending: %s\n", id, message.toString());
                 sock.send(messageOut);                
             } catch (IOException e) {
                 System.out.println("IO: " + e.getMessage());
@@ -57,15 +57,17 @@ public class MulticastPeer extends Thread {
     	}
     }
     
-    private String listenToGroup() {
+    private Message listenToGroup() {
     	// get messages from others in the same group
     	if(sock != null) {
 	    	try {
 		    	byte[] buffer = new byte[1000];
 		    	DatagramPacket messageIn =	new DatagramPacket(buffer, buffer.length);
 		    	sock.receive(messageIn);
-		    	String received = new String(messageIn.getData());
+		    	//String received = new String(messageIn.getData());
 		    	//System.out.printf("Received: %s.\n", received);
+		    	Message received = new Message();
+		    	received.packetToMessageMap(messageIn);
 		    	return received;
 		    }catch (SocketException e){
 		    	System.out.printf("Socket %s: %s.\n", id ,e.getMessage());
@@ -98,9 +100,9 @@ public class MulticastPeer extends Thread {
     
     public void run(){    	
     	while(keepAlive) {
-    		String received = listenToGroup();
+    		Message received = listenToGroup();
     		if(received != null) {
-    			System.out.printf(">> Peer %s received: %s\n", user, received);
+    			System.out.printf(">> Peer %s said: %s\n", received.getUsername(), new String(received.getMessageBody()));
     		}
     		
     	}
