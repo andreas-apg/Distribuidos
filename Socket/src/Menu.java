@@ -28,15 +28,19 @@ public class Menu{
 		p1.close();*/
 		System.out.print("Message: ");
 		String message = keyboard.nextLine();
-		System.out.println("Message: " + message);
+		System.out.println("Message: " + new String(message.getBytes()));
 		byte[] sign = signature.signDown(message);
 		byte[] sign2 = signature2.signDown(message);
 		System.out.println("Signature: " + signature.signDown(message));
+		Message msg = new Message("text", "Me", message, sign);
 		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(message, signature.getPublicKey(), sign));
 		System.out.println("Signature 2 on object 2 verifies: " + signature.verify(message, signature.getPublicKey(), sign2));
 		System.out.println("Signature 2 on object 1 verifies: " + signature.verify(message, signature2.getPublicKey(), sign));
 		System.out.println("Signature 2 on object 2 verifies: " + signature.verify(message, signature2.getPublicKey(), sign2));
-		
+		System.out.println(msg.getType());
+		System.out.println(new String(msg.getBody()));
+		System.out.println(msg.getUsername());
+		System.out.println(msg.getSignature());
 		keyboard.close();
 	}
 }
