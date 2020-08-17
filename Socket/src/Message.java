@@ -24,7 +24,7 @@ public class Message {
 		messageMap.put("type", type);
 		messageMap.put("username", username);
 		messageMap.put("messageBody", body);
-		Charset charset = StandardCharsets.US_ASCII;
+		Charset charset = StandardCharsets.ISO_8859_1;
 		messageMap.put("signature", charset.decode(ByteBuffer.wrap(signature)).toString());
 	}
 	
@@ -70,7 +70,7 @@ public class Message {
 	}
 	
 	public byte[] getSignature() {
-		Charset charset = StandardCharsets.US_ASCII;
+		Charset charset = StandardCharsets.ISO_8859_1;
 		return charset.encode(messageMap.get("signature")).array();
 	}
 	
