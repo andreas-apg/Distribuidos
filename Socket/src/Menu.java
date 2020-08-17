@@ -1,4 +1,4 @@
-import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
 import java.util.Scanner;
 
 
@@ -14,16 +14,29 @@ public class Menu{
 		Scanner keyboard = new Scanner(System.in);
 		System.out.print("Username: ");
 		String user = keyboard.nextLine();
-		byte[] encodedPublicKey = signature.getPublicKey().getEncoded();
-		MulticastPeer p1 = new MulticastPeer("227.0.0.10", 6543, user, encodedPublicKey);
-		p1.connect();
+		//byte[] encodedPublicKey = signature.getPublicKey().getEncoded();
+		//MulticastPeer p1 = new MulticastPeer("227.0.0.10", 6543, user, encodedPublicKey);
+		MulticastPeer p1 = null;
+		try {
+			p1 = new MulticastPeer("227.0.0.10", 6543, user, Sign.toString(signature.getPublicKey()));
+			p1.connect();
+		} catch (GeneralSecurityException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
 		
 		/* sending the public key in multicast. The charset from
 		 * Message class is used to properly convert the message
 		 * to a string.
 		 */
 		//p1.send(new Message("hail", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
-		p1.send(new Message("hail", user,  p1.getUnicast().getPort(), encodedPublicKey));
+		try {
+			p1.send(new Message("hail", user,  p1.getUnicast().getPort(), Sign.toString(signature.getPublicKey())));
+		} catch (GeneralSecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		String text = "";
 		while(!text.toLowerCase().equals("quit")) {
 			System.out.println("");
@@ -33,11 +46,16 @@ public class Menu{
 				MulticastPeer.peerList();
 			}
 			else if(!text.toLowerCase().equals("quit") && !text.isEmpty()) {
-				p1.send(new Message("input", user, text, signature.signDown(text)));
+				p1.send(new Message("input", user, text, signature.signDown(text)));				
 			}
 	
 		}
-		p1.send(new Message("quit", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
+		try {
+			p1.send(new Message("quit", user, Sign.toString(signature.getPublicKey())));
+		} catch (GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		p1.close();
 		/*
 		System.out.print("What");
@@ -64,7 +82,7 @@ public class Menu{
 		//System.out.println(msg.getUsername());
 		//System.out.println(new String(msg.getSignature()));
 		//System.out.println(msg.toString());
-		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(msg.getMessageBody()T, signature.getPublicKey(), sign));
+		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(msg.getMessageBody(), signature.getPublicKey(), sign));
 		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(msg.getMessageBody(), signature.getPublicKey(), msg.getSignature()));
 		*/
 		keyboard.close();

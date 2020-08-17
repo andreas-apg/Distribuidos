@@ -4,17 +4,17 @@
 
 public class User {
 	private String username;
-	private byte[] publicKey;
+	private String publicKey;
 	private int unicastPort;
 	private int reputation;
 	
-	public User(String username, byte[] publicKey, int reputation) {
+	public User(String username, String publicKey, int reputation) {
 		this.username = username;
 		this.publicKey = publicKey;
 		this.setReputation(reputation);
 	}
 	
-	public User(String username, byte[] publicKey, int unicastPort, int reputation) {
+	public User(String username, String publicKey, int unicastPort, int reputation) {
 		this.username = username;
 		this.publicKey = publicKey;
 		this.unicastPort = unicastPort;
@@ -29,11 +29,11 @@ public class User {
 		this.username = username;
 	}
 
-	public byte[] getPublicKey() {
+	public String getPublicKey() {
 		return publicKey;
 	}
 
-	public void setPublicKey(byte[] publicKey) {
+	public void setPublicKey(String publicKey) {
 		this.publicKey = publicKey;
 	}
 

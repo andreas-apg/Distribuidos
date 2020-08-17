@@ -52,7 +52,7 @@ public class Unicast extends Thread{
 					/* this adds the user who just multicasted their public
 					* key to the user list.
 					*/
-					MulticastPeer.addPeer(received.getUsername(), Message.charset.encode(received.getPublicKey()).array(), received.getUnicastPort(), 10);
+					MulticastPeer.addPeer(received.getUsername(), received.getPublicKey(), received.getUnicastPort(), 10);
 					// lists all connected peers.
 					MulticastPeer.peerList();
 				}

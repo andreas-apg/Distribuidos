@@ -16,7 +16,7 @@ public class MulticastPeer extends Thread {
     private Unicast unicast = new Unicast();
     
     //class constructor for MulticastPeer
-    public MulticastPeer(String group, int port, String user, byte[] publicKey){
+    public MulticastPeer(String group, int port, String user, String publicKey){
     	// the group proper will be set by InetAddress.getByName using the string, later
     	this.ip = group;
     	this.port = port;
@@ -105,35 +105,61 @@ public class MulticastPeer extends Thread {
 	    for(User i : userList) {
 	    	if(!i.getUsername().equals(user.getUsername())) {
 	    		System.out.printf("%s, rep: %s\n", i.getUsername(), i.getReputation());
-	    		//System.out.println(i);
+	    		//System.out.println(i.getPublicKey());
 	    	}
 	    }
     }
     
-    public static void addPeer(String username, byte[] publicKey, String unicastPort, int reputation) {
+    public static void addPeer(String username, String publicKey, String unicastPort, int reputation) {
     	User newUser = new User(username, publicKey, Integer.parseInt(unicastPort), reputation);
 		userList.add(newUser);
     }
     
-    
+    // method that continuously runs in the thread.
     public void run(){    	
     	while(keepAlive) {
     		Message received = listenToGroup();
-    		// no need to treat messages said by the own user.
+    		/* no need to treat messages from the the own user,
+    		 * thus the check if the username in the package
+    		 * is the same as the instanced one.
+    		 */
     		if(received != null && !received.getUsername().equals(user.getUsername())) {
+    			/* if message type is "input", its contents
+    			 * are the text string sent by the user, along
+    			 * with the digital signature generated for it.
+    			 * source: https://docs.oracle.com/javase/tutorial/security/apisign/vstep2.html
+    			 */
     			if(received.getType().equals("input")) {
+    				String rawPublicKey = null;
+    				for(User i : userList) {
+    					if(received.getUsername().equals(i.getUsername())) {
+    						//System.out.println(received.getUsername() + "  " + i.getUsername());
+    						//System.out.println(received.getUsername().equals(i.getUsername()));
+    						rawPublicKey = i.getPublicKey();
+    						break;
+    					}
+    					//System.out.println(rawPublicKey);
+    				}
     				System.out.printf(">> Peer %s said: %s\n", received.getUsername(), new String(received.getMessageBody()));
+    				System.out.printf("The message verifies: %s.\n", received.verifyMessage(rawPublicKey));
     			}
+    			/* if message type is "hail", the it contains
+    			 * that peer's public key and unicast port.
+    			 */
     			else if(received.getType().equals("hail")) {
     				System.out.printf("Peer %s has joined the group.\n", received.getUsername());
     				System.out.printf("Received key from %s. Their port: %s\n", received.getUsername(), received.getUnicastPort());
-    				addPeer(received.getUsername(), Message.charset.encode(received.getPublicKey()).array(), received.getUnicastPort(), 10);
+    				addPeer(received.getUsername(), received.getPublicKey(), received.getUnicastPort(), 10);
     				/* we will send to the peer who sent the message this one's
 					* username, unicast port and public key 
 					* */
     				unicast.send(new Message("hail", user.getUsername(), user.getUnicastPort(), user.getPublicKey()), "127.0.0.1", Integer.parseInt(received.getUnicastPort()));
     				peerList();
     			}
+    			/* if the message type is "quit", that peer
+    			 * is quitting the group and will accordingly
+    			 * be removed from the local user list.
+    			 */
     			else if(received.getType().equals("quit")) {
     				System.out.printf("Peer %s quit the group.\n", received.getUsername());
     				// removes the user from the userList when they quit.

@@ -1,10 +1,13 @@
 import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import java.util.Base64;
 
 
 //https://docs.oracle.com/javase/tutorial/security/apisign/step2
@@ -50,7 +53,7 @@ public class Sign {
 	}
 	
 	// this method signs a message.
-	public byte[] signDown(String message) {
+	public String signDown(String message) {
 		try {
 			/* the signature will use the rsa object created
 			 * when the class was instanced.
@@ -66,7 +69,9 @@ public class Sign {
 			/* the signature is obtained from the signature
 			 * object using the "sign" method.
 			 */
-			return signature.sign();
+			byte[] signByte = signature.sign();
+			return Base64.getEncoder().encodeToString(signByte);
+
 		} catch (SignatureException e) {
 			System.err.println("Caught signature exception " + e.toString());
 		}
@@ -76,7 +81,7 @@ public class Sign {
 	/* this method verifies if the signature
 	 * matches that of the public key.
 	 */
-	public Boolean verify(String message, PublicKey publicKey, byte[] signature) {
+	public static Boolean verify(String message, PublicKey publicKey, byte[] signature) {
 		try {
 			/* to verify a signature, another instance of the signature
 			 * class must be created using the same algorithm that was
@@ -175,6 +180,21 @@ public class Sign {
 		}
 		return null;
 	}
+	
+    // Converts the PublicKey object into a string.
+    public static String toString(PublicKey pub) throws GeneralSecurityException {
+        KeyFactory fact = KeyFactory.getInstance("RSA");
+        X509EncodedKeySpec spec = fact.getKeySpec(pub, X509EncodedKeySpec.class);
+        return Base64.getEncoder().encodeToString(spec.getEncoded());
+    }
+
+    // Converts the the string with the public key back into PublicKey object.
+    public static PublicKey toPublicKey (String pubKey_str) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        byte[] publicBytes = Base64.getDecoder().decode(pubKey_str);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return (PublicKey) keyFactory.generatePublic(keySpec);
+    }
 	
 	
 	public PublicKey getPublicKey() {

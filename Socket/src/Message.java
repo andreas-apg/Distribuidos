@@ -1,7 +1,10 @@
 import java.net.DatagramPacket;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +23,7 @@ public class Message {
 	public final static Charset charset = StandardCharsets.ISO_8859_1;
 	
 	// constructor for message class.
-	public Message(String type, String username, String body, byte[] signature) {
+	public Message(String type, String username, String body, String signature) {
 		messageMap.put("type", type);
 		messageMap.put("username", username);
 		messageMap.put("messageBody", body);
@@ -31,7 +34,7 @@ public class Message {
 		 * in the other way.
 		 * Source: https://www.baeldung.com/java-string-to-byte-array
 		 */
-		messageMap.put("signature", charset.decode(ByteBuffer.wrap(signature)).toString());
+		messageMap.put("signature", signature);
 	}
 	
 	// constructor for messages that do not need verification.
@@ -42,11 +45,11 @@ public class Message {
 	}
 	
 	// constructor for greeting messages
-	public Message(String type, String username, int unicastPort, byte[] publicKey) {
+	public Message(String type, String username, int unicastPort, String publicKey) {
 		messageMap.put("type", type);
 		messageMap.put("username", username);
 		messageMap.put("unicastPort", String.valueOf(unicastPort));
-		messageMap.put("publicKey", charset.decode(ByteBuffer.wrap(publicKey)).toString());
+		messageMap.put("publicKey", publicKey);
 	}
 	// empty constructor used for received messages.
 	public Message() {
@@ -75,6 +78,33 @@ public class Message {
 				messageMap.put(entry[0].trim(), entry[1].trim());
 			}
 		}
+	}
+	
+	/* method used to verify the message using
+	 * its signature along with that peer's public key.
+	 */
+	public boolean verifyMessage(String rawPublicKey) {
+		try {			
+			/* the keyFactory class is used re-obtain the public
+			 * key that was converted to a byte[]. However, it
+			 * is needed to decode it with the correct charset:
+			 * ISO_8859_1 and feed that to an X509EncodedKeySpec
+			 * class, first.
+			 */
+			PublicKey publicKey = Sign.toPublicKey(rawPublicKey);
+			
+			/* the verify method made for the Sign class will be used
+			 * to do the verification proper
+			 */
+			byte[] signature = Base64.getDecoder().decode((this.getSignature()));
+			return Sign.verify(this.getMessageBody(), publicKey, signature);
+			
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println("KeyFactory algorithm error: " + e.getMessage());
+	    } catch (InvalidKeySpecException e) {
+	    	System.out.println("KeyFactory key specification error: " + e.getMessage());
+		}
+		return false;
 	}
 	
 	public String getType() {
