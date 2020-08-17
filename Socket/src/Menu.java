@@ -1,4 +1,7 @@
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -12,23 +15,30 @@ public class Menu{
 	*/
 	public static void main(String args[]){
 		Sign signature = new Sign();
-		Sign signature2 = new Sign();
 		Scanner keyboard = new Scanner(System.in);
-		/*
 		System.out.print("Username: ");
 		String user = keyboard.nextLine();
-		MulticastPeer p1 = new MulticastPeer("227.0.0.10", 6543, user);
+		byte[] encodedPublicKey = signature.getPublicKey().getEncoded();
+		MulticastPeer p1 = new MulticastPeer("227.0.0.10", 6543, user, encodedPublicKey);
 		p1.connect();
+		
+		/* sending the public key in multicast. The charset from
+		 * Message class is used to properly convert the message
+		 * to a string.
+		 */
+		p1.send(new Message("hail", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
 		String text = "";
 		while(!text.toLowerCase().equals("quit")) {
-			System.out.printf("<< %s says: %s", user, text);
-			text = keyboard.nextLine();				
-			if(text.toLowerCase() != "quit") {
+			System.out.println("");
+			//System.out.printf("<< %s says: ",user, text);		
+			text = keyboard.nextLine();						
+			if(text.toLowerCase() != "quit" || !text.isEmpty()) {
 				p1.send(new Message("input", user, text, signature.signDown(text)));
 			}
 		}
-		p1.close();*/
-		
+		p1.send(new Message("quit", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
+		p1.close();
+		/*
 		System.out.print("What");
 		String message = keyboard.nextLine();
 		System.out.println("Message: " + new String(message.getBytes()));
@@ -53,8 +63,9 @@ public class Menu{
 		//System.out.println(msg.getUsername());
 		//System.out.println(new String(msg.getSignature()));
 		//System.out.println(msg.toString());
-		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(msg.getMessageBody(), signature.getPublicKey(), sign));
+		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(msg.getMessageBody()T, signature.getPublicKey(), sign));
 		System.out.println("Signature 1 on object 1 verifies: " + signature.verify(msg.getMessageBody(), signature.getPublicKey(), msg.getSignature()));
+		*/
 		keyboard.close();
 	}
 }

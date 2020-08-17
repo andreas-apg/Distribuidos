@@ -10,7 +10,7 @@ import java.util.Map;
  * the messages that will be sent in the
  * program. The messages have three parts:
  * >type - the type of message. Possible values:
- *  "input", "pubKey", "hail", "bye";
+ *  "input", "pubKey", "hail", "quit";
  * >username - the name of the sender;
  * >messageBody - the message contents;
  * >signature - the signature for the message,
@@ -18,14 +18,28 @@ import java.util.Map;
  */
 public class Message {
 	Map<String, String> messageMap = new HashMap<String, String>();
+	public final static Charset charset = StandardCharsets.ISO_8859_1;
 	
 	// constructor for message class.
 	public Message(String type, String username, String body, byte[] signature) {
 		messageMap.put("type", type);
 		messageMap.put("username", username);
 		messageMap.put("messageBody", body);
-		Charset charset = StandardCharsets.ISO_8859_1;
+		
+		/* it is needed to specify the charset as ISO_8859_1
+		 * to properly convert the signature into a string.
+		 * charset.decode is used to guarantee the typecasting
+		 * in the other way.
+		 * Source: https://www.baeldung.com/java-string-to-byte-array
+		 */
 		messageMap.put("signature", charset.decode(ByteBuffer.wrap(signature)).toString());
+	}
+	
+	// constructor for messages that do not need verification.
+	public Message(String type, String username, String body) {
+		messageMap.put("type", type);
+		messageMap.put("username", username);
+		messageMap.put("messageBody", body);
 	}
 	
 	// empty constructor used for received messages.
@@ -51,9 +65,9 @@ public class Message {
 		 */
 		for(String pair : keyValuePairs) {
 			String[] entry = pair.split("=");
-			System.out.println(entry[0]);
-			System.out.println(entry[1]);
-			messageMap.put(entry[0].trim(), entry[1].trim());
+			if(entry.length > 1) {
+				messageMap.put(entry[0].trim(), entry[1].trim());
+			}
 		}
 	}
 	
@@ -70,7 +84,10 @@ public class Message {
 	}
 	
 	public byte[] getSignature() {
-		Charset charset = StandardCharsets.ISO_8859_1;
+		/* using ISO_8859_1 to encode the string back
+		 * into the original byte[] format used for
+		 * verification.
+		 */
 		return charset.encode(messageMap.get("signature")).array();
 	}
 	

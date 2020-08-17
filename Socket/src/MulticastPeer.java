@@ -8,19 +8,19 @@ public class MulticastPeer extends Thread {
     private MulticastSocket sock;
     private int port;    
     private int id;
-    private String user;
+    private User user;
     private InetAddress group;
     private String ip;
     private Thread thread;
     private Boolean keepAlive = true;
-    private static ArrayList<String> userList = new ArrayList<String>();
+    private ArrayList<User> userList = new ArrayList<User>();
     
     //class constructor for MulticastPeer
-    public MulticastPeer(String group, int port, String user){
+    public MulticastPeer(String group, int port, String user, byte[] publicKey){
     	// the group proper will be set by InetAddress.getByName using the string, later
     	this.ip = group;
     	this.port = port;
-    	this.user = user;
+    	this.user = new User(user, publicKey, 10);
     }
     
     // connects user to the group and adds them to the list of connected users
@@ -31,8 +31,7 @@ public class MulticastPeer extends Thread {
         	group = InetAddress.getByName(ip);
 		    sock = new MulticastSocket(port);
 		    sock.joinGroup(group);
-		    System.out.printf("Peer %s connected to IP %s, port %s.\n", id, ip, port);
-		    System.out.printf("Number of peers: %s\n", numberOnline());
+		    System.out.printf("Peer %s connected to IP %s, port %s.\n", user.getUsername(), ip, port);
 		    this.start();
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
@@ -46,7 +45,7 @@ public class MulticastPeer extends Thread {
             try {
                 byte[] msg = message.toString().getBytes();
                 DatagramPacket messageOut = new DatagramPacket(msg, msg.length, group, port);
-                System.out.printf("<< Peer %s sending: %s\n", id, message.toString());
+                //System.out.printf("<< Peer %s sending: %s\n", id, message.toString());
                 sock.send(messageOut);                
             } catch (IOException e) {
                 System.out.println("IO: " + e.getMessage());
@@ -81,14 +80,10 @@ public class MulticastPeer extends Thread {
     	return null;
     }
     
-    public int numberOnline() {
-    	return idCounter;
-    }
-    
     public void start() {
     	if(thread == null) {
-		    thread = new Thread(this, user);
-		    System.out.printf("Peer %s: starting thread...\n", id);
+		    thread = new Thread(this, user.getUsername());
+		    System.out.printf("Peer %s: starting thread...\n", user.getUsername());
 		    thread.start();
     	}
     }
@@ -101,8 +96,25 @@ public class MulticastPeer extends Thread {
     public void run(){    	
     	while(keepAlive) {
     		Message received = listenToGroup();
-    		if(received != null) {
-    			System.out.printf(">> Peer %s said: %s\n", received.getUsername(), new String(received.getMessageBody()));
+    		// no need to treat messages said by the own user.
+    		if(received != null && !received.getUsername().equals(user.getUsername())) {
+    			if(received.getType().equals("input")) {
+    				System.out.printf(">> Peer %s said: %s\n", received.getUsername(), new String(received.getMessageBody()));
+    			}
+    			if(received.getType().equals("hail")) {
+    				System.out.printf("Peer %s has joined the group.\n", received.getUsername());
+    				User newUser = new User(received.getUsername(), Message.charset.encode(received.getMessageBody()).array(), 10);
+    				userList.add(newUser);
+    			    System.out.printf("Number of peers: %s. Known peers: \n", userList.size() + 1);
+    			    for(User i : userList) {
+    			    	if(!i.getUsername().equals(user.getUsername())) {
+    			    		System.out.printf("%s: %s\n", i.getUsername(), i.getReputation());
+    			    	}
+    			    }
+    			}
+    			else if(received.getType().equals("quit")) {
+    				System.out.printf("Peer %s quit the group.", received.getUsername());
+    			}
     		}
     		
     	}
