@@ -14,6 +14,7 @@ public class MulticastPeer extends Thread {
     private Boolean keepAlive = true;
     private static ArrayList<User> userList = new ArrayList<User>();
     private Unicast unicast = new Unicast();
+    private static Message latestMessage = null;
     
     //class constructor for MulticastPeer
     public MulticastPeer(String group, int port, String user, String publicKey){
@@ -72,6 +73,12 @@ public class MulticastPeer extends Thread {
 		    	//System.out.printf("Received: %s.\n", received);
 		    	Message received = new Message();
 		    	received.packetToMessageMap(messageIn);
+		    	/* updates the value of latestMessage if the sender is
+		    	 * another peer.
+		    	 */
+		    	if(!received.getUsername().equals(user.getUsername()) && received.getType().equals("input")) {
+		    		latestMessage = received;
+		    	}
 		    	return received;
 		    }catch (SocketException e){
 		    	System.out.printf("Socket %s: %s.\n", id ,e.getMessage());
@@ -94,9 +101,9 @@ public class MulticastPeer extends Thread {
     }
     
     public void close() {
+    	unicast.close();
     	System.out.printf("Peer %s out.\n", id);
     	keepAlive = false;
-    	unicast.close();
     	sock.close();
     }
     
@@ -143,6 +150,19 @@ public class MulticastPeer extends Thread {
     				System.out.printf(">> Peer %s said: %s\n", received.getUsername(), new String(received.getMessageBody()));
     				System.out.printf("The message verifies: %s.\n", received.verifyMessage(rawPublicKey));
     			}
+    			/* if message type is "report", the received message
+    			 * is reporting the user who sent the latest message.
+    			 */
+    			else if(received.getType().equals("grade")) {
+    				System.out.printf(">> Peer %s reported %s!\n", received.getUsername(), received.getMessageBody());
+    				for(User i : userList) {
+    					// the reported user is in the message body.
+    					if(received.getMessageBody().equals(i.getUsername()) && !received.getMessageBody().equals(user.getUsername())) {
+    						i.setReputation(i.getReputation() - 1);
+    						peerList();
+    					}
+    				}
+    			}
     			/* if message type is "hail", the it contains
     			 * that peer's public key and unicast port.
     			 */
@@ -176,6 +196,18 @@ public class MulticastPeer extends Thread {
     		
     	}
     	System.out.println("Quitting.");
+    }
+    
+    public User getUser(){
+    	return user;
+    }
+    
+    public ArrayList<User> getUserList() {
+    	return userList;
+    }
+    
+    public static Message getLatestMessage() {
+    	return latestMessage;
     }
     
     public Unicast getUnicast() {

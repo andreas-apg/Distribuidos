@@ -181,14 +181,23 @@ public class Sign {
 		return null;
 	}
 	
-    // Converts the PublicKey object into a string.
+    /* Converts the PublicKey object into a string.
+    * base64 decoder is used to not corrupt the data when going from string
+    * to byte[] over and over.
+    */
     public static String toString(PublicKey pub) throws GeneralSecurityException {
+    	/* the X509EncodedKeySpec is used to obtain a 
+    	 * 
+    	 */
         KeyFactory fact = KeyFactory.getInstance("RSA");
         X509EncodedKeySpec spec = fact.getKeySpec(pub, X509EncodedKeySpec.class);
         return Base64.getEncoder().encodeToString(spec.getEncoded());
     }
 
-    // Converts the the string with the public key back into PublicKey object.
+    /* Converts the the string with the public key back into PublicKey object.
+     * base64 decoder is used to not corrupt the data when going from string
+     * to byte[] over and over.
+     */
     public static PublicKey toPublicKey (String pubKey_str) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] publicBytes = Base64.getDecoder().decode(pubKey_str);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);

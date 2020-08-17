@@ -85,16 +85,12 @@ public class Message {
 	 */
 	public boolean verifyMessage(String rawPublicKey) {
 		try {			
-			/* the keyFactory class is used re-obtain the public
-			 * key that was converted to a byte[]. However, it
-			 * is needed to decode it with the correct charset:
-			 * ISO_8859_1 and feed that to an X509EncodedKeySpec
-			 * class, first.
-			 */
 			PublicKey publicKey = Sign.toPublicKey(rawPublicKey);
 			
 			/* the verify method made for the Sign class will be used
-			 * to do the verification proper
+			 * to do the verification proper. It's necessary to decode
+			 * the signature using the same base64 that was used when
+			 * the thing was sent over the chat.
 			 */
 			byte[] signature = Base64.getDecoder().decode((this.getSignature()));
 			return Sign.verify(this.getMessageBody(), publicKey, signature);

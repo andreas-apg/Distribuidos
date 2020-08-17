@@ -1,7 +1,6 @@
 /* this class was made to simplify
  * the creation of the user list.
  */
-
 public class User {
 	private String username;
 	private String publicKey;
