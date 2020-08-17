@@ -1,4 +1,3 @@
-import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -10,7 +9,7 @@ import java.util.Map;
  * the messages that will be sent in the
  * program. The messages have three parts:
  * >type - the type of message. Possible values:
- *  "input", "pubKey", "hail", "quit";
+ *  "input", "pubKey", "hail", "quit", "grade";
  * >username - the name of the sender;
  * >messageBody - the message contents;
  * >signature - the signature for the message,
@@ -42,6 +41,13 @@ public class Message {
 		messageMap.put("messageBody", body);
 	}
 	
+	// constructor for greeting messages
+	public Message(String type, String username, int unicastPort, byte[] publicKey) {
+		messageMap.put("type", type);
+		messageMap.put("username", username);
+		messageMap.put("unicastPort", String.valueOf(unicastPort));
+		messageMap.put("publicKey", charset.decode(ByteBuffer.wrap(publicKey)).toString());
+	}
 	// empty constructor used for received messages.
 	public Message() {
 		
@@ -81,6 +87,14 @@ public class Message {
 	
 	public String getMessageBody() {
 		return messageMap.get("messageBody");
+	}
+	
+	public String getUnicastPort() {
+		return messageMap.get("unicastPort");
+	}
+	
+	public String getPublicKey() {
+		return messageMap.get("publicKey");
 	}
 	
 	public byte[] getSignature() {

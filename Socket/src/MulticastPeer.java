@@ -1,6 +1,5 @@
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.io.*;
 
 public class MulticastPeer extends Thread {
@@ -8,19 +7,20 @@ public class MulticastPeer extends Thread {
     private MulticastSocket sock;
     private int port;    
     private int id;
-    private User user;
+    private static User user;
     private InetAddress group;
     private String ip;
     private Thread thread;
     private Boolean keepAlive = true;
-    private ArrayList<User> userList = new ArrayList<User>();
+    private static ArrayList<User> userList = new ArrayList<User>();
+    private Unicast unicast = new Unicast();
     
     //class constructor for MulticastPeer
     public MulticastPeer(String group, int port, String user, byte[] publicKey){
     	// the group proper will be set by InetAddress.getByName using the string, later
     	this.ip = group;
     	this.port = port;
-    	this.user = new User(user, publicKey, 10);
+    	MulticastPeer.user = new User(user, publicKey, 10);
     }
     
     // connects user to the group and adds them to the list of connected users
@@ -28,11 +28,16 @@ public class MulticastPeer extends Thread {
     	idCounter++;
     	id = idCounter;
         try {
+        	// starts the multicast thread
         	group = InetAddress.getByName(ip);
 		    sock = new MulticastSocket(port);
 		    sock.joinGroup(group);
 		    System.out.printf("Peer %s connected to IP %s, port %s.\n", user.getUsername(), ip, port);
 		    this.start();
+		    
+		    // starts the unicast thread
+		    unicast.start();
+		    user.setUnicastPort(unicast.getPort());
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
         } catch (IOException e) {
@@ -87,11 +92,29 @@ public class MulticastPeer extends Thread {
 		    thread.start();
     	}
     }
+    
     public void close() {
     	System.out.printf("Peer %s out.\n", id);
     	keepAlive = false;
+    	unicast.close();
     	sock.close();
     }
+    
+    public static void peerList() {
+	    System.out.printf("Number of other peers: %s. Known peers: \n", userList.size());
+	    for(User i : userList) {
+	    	if(!i.getUsername().equals(user.getUsername())) {
+	    		System.out.printf("%s, rep: %s\n", i.getUsername(), i.getReputation());
+	    		//System.out.println(i);
+	    	}
+	    }
+    }
+    
+    public static void addPeer(String username, byte[] publicKey, String unicastPort, int reputation) {
+    	User newUser = new User(username, publicKey, Integer.parseInt(unicastPort), reputation);
+		userList.add(newUser);
+    }
+    
     
     public void run(){    	
     	while(keepAlive) {
@@ -101,24 +124,36 @@ public class MulticastPeer extends Thread {
     			if(received.getType().equals("input")) {
     				System.out.printf(">> Peer %s said: %s\n", received.getUsername(), new String(received.getMessageBody()));
     			}
-    			if(received.getType().equals("hail")) {
+    			else if(received.getType().equals("hail")) {
     				System.out.printf("Peer %s has joined the group.\n", received.getUsername());
-    				User newUser = new User(received.getUsername(), Message.charset.encode(received.getMessageBody()).array(), 10);
-    				userList.add(newUser);
-    			    System.out.printf("Number of peers: %s. Known peers: \n", userList.size() + 1);
-    			    for(User i : userList) {
-    			    	if(!i.getUsername().equals(user.getUsername())) {
-    			    		System.out.printf("%s: %s\n", i.getUsername(), i.getReputation());
-    			    	}
-    			    }
+    				System.out.printf("Received key from %s. Their port: %s\n", received.getUsername(), received.getUnicastPort());
+    				addPeer(received.getUsername(), Message.charset.encode(received.getPublicKey()).array(), received.getUnicastPort(), 10);
+    				/* we will send to the peer who sent the message this one's
+					* username, unicast port and public key 
+					* */
+    				unicast.send(new Message("hail", user.getUsername(), user.getUnicastPort(), user.getPublicKey()), "127.0.0.1", Integer.parseInt(received.getUnicastPort()));
+    				peerList();
     			}
     			else if(received.getType().equals("quit")) {
-    				System.out.printf("Peer %s quit the group.", received.getUsername());
+    				System.out.printf("Peer %s quit the group.\n", received.getUsername());
+    				// removes the user from the userList when they quit.
+    				for(User i : userList) {
+    					if(i.getUsername().equals(received.getUsername())) {
+    						userList.remove(i);
+    						break;
+    					}
+    				}
+    				
+    				peerList();
     			}
     		}
     		
     	}
     	System.out.println("Quitting.");
+    }
+    
+    public Unicast getUnicast() {
+    	return this.unicast;
     }
     
 }

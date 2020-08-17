@@ -1,9 +1,5 @@
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 
 public class Menu{
@@ -26,15 +22,20 @@ public class Menu{
 		 * Message class is used to properly convert the message
 		 * to a string.
 		 */
-		p1.send(new Message("hail", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
+		//p1.send(new Message("hail", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
+		p1.send(new Message("hail", user,  p1.getUnicast().getPort(), encodedPublicKey));
 		String text = "";
 		while(!text.toLowerCase().equals("quit")) {
 			System.out.println("");
 			//System.out.printf("<< %s says: ",user, text);		
-			text = keyboard.nextLine();						
-			if(text.toLowerCase() != "quit" || !text.isEmpty()) {
+			text = keyboard.nextLine();			
+			if(text.equals("peer")) {
+				MulticastPeer.peerList();
+			}
+			else if(!text.toLowerCase().equals("quit") && !text.isEmpty()) {
 				p1.send(new Message("input", user, text, signature.signDown(text)));
 			}
+	
 		}
 		p1.send(new Message("quit", user, Message.charset.decode(ByteBuffer.wrap(encodedPublicKey)).toString()));
 		p1.close();

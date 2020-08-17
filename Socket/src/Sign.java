@@ -6,8 +6,6 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import java.lang.Object;
-
 
 //https://docs.oracle.com/javase/tutorial/security/apisign/step2
 
