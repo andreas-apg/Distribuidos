@@ -1,0 +1,50 @@
+Features:
+
+-Compra e Venda:
+	-cliente emite ordem de compra ou venda (usuario, codigo acao, quantidade, valor, prazo)
+	-servidor realiza a negociacao quando os precos sao compativeis
+	-servidor notifica clientes de transacao(acao, quant, valor)
+	-servidor atualiza a carteira dos clientes
+	-servidor atualiza a lista de interesse dos clientes
+	-servidor nao permite a compra/venda da mesma acao para mais de um cliente (concorrencia)
+
+-Lista de Cotacoes:
+	-servidor matem uma lista de interesse de acoes para cada cliente
+	-cliente adiciona ou remove acoes desta lista
+	-cliente requisita lista atual com as respectivas cotacoes
+
+-Carteira:
+	-servidor (ou cliente) mantem uma lista de acoes do cliente
+	-cliente requisita sua carteira (acoes, quantidade)
+
+-Stop gain/loss:
+	-servidor matem uma lista de interesse de evento(acao, valor max, valor min, clientes interessados)
+	-servidor notifica clientes quando uma acao atinge o valor limite
+	-cliente adiciona ou remove acoes desta lista
+	-cliente requisita lista atual
+	
+-Mercado
+	-servidor deve ter uma lista de acoes disponiveis no mercado e seus valores iniciais
+	-servidor deve prover um meio de um adm atualizar o preco das acoes
+
+-Definir o processo de inicio do programa
+	-Procedimentos de inicio do servidor (inserir acoes, iniciar Servico Nome, iniciar servico de transacao,  ..)
+	-Procedimentos de inicio do cliente (encontrar o servidor, ...)
+
+Metodos:
+	-Metodos do Servidor ao Cliente:
+		-inserir ou remover acao na lista de interesse
+		-registrar ordem de compra ou venda
+		-obter cotacao das acoes na lista de interesse
+		-registrar interesse em limite de perca/ganho
+
+	-Metodos do Cliente para o Servidor: 
+		-notificar evento (transacao concluida, limite de perca/ganho)
+
+Classes candidatas:
+	-Cliente
+	-Servidor
+	-Carteira
+	-Transacao
+	-ControleDeTransacao
+	-ControleDePercaEGanho
