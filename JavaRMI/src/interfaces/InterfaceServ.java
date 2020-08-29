@@ -30,5 +30,11 @@ public interface InterfaceServ extends Remote {
     
     public void removerDaListaLimiteDePerda(InterfaceCli referenciaCliente,
         String usuario, String codigoDaAcao) throws RemoteException;    
+    
+    public void inserirNaListaLimiteDeGanho(InterfaceCli referenciaCliente,
+        String usuario, String codigoDaAcao) throws RemoteException;
+    
+    public void removerDaListaLimiteDeGanho(InterfaceCli referenciaCliente,
+        String usuario, String codigoDaAcao) throws RemoteException;    
 
 }
