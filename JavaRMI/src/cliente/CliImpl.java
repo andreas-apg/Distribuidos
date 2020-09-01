@@ -16,6 +16,11 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
         //referenciaServidor.registrarInteresse("Oi", this);
     }
     
+    // Inicializa a Lista de Acoes que o cliente ja comeca com ela
+    private void inicializarListaDeCotacoes(){
+
+    }
+
 
     @Override
     public void notificar(String texto) throws RemoteException {

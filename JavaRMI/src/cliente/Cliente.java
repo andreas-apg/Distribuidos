@@ -11,10 +11,11 @@ public class Cliente {
     
     public void start() throws Exception {
         
+        
         Registry referenciaServicoNomes = LocateRegistry.getRegistry();
 
         referenciaServidor = (InterfaceServ) referenciaServicoNomes.lookup("HomeBroker");
-
+        
         cliente = new CliImpl(referenciaServidor);    
         
     }
