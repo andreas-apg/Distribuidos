@@ -5,6 +5,8 @@ import interfaces.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import common.Ordem;
+
 public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 
     private static final long serialVersionUID = 1L;
@@ -13,12 +15,8 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 
     protected CliImpl(InterfaceServ referenciaServidor) throws RemoteException {
         this.referenciaServidor = referenciaServidor;
+        referenciaServidor.registrarNovoCliente("giovane");
         //referenciaServidor.registrarInteresse("Oi", this);
-    }
-    
-    // Inicializa a Lista de Acoes que o cliente ja comeca com ela
-    private void inicializarListaDeCotacoes(){
-
     }
 
 
@@ -27,4 +25,24 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
         System.out.println("Notificacao recebida: " + texto);
 
     }
+
+    
+	public void emitirOrdemDeCompraOuVenda(Ordem ordem) {
+        try {
+            referenciaServidor.registrarOrdemDeCompraOuVenda(ordem);
+        } catch (RemoteException e) {
+            System.out.println("Erro ao emitir ordem de Compra / Venda");
+            e.printStackTrace();
+        }
+	}
+
+
+	public void obterCarteira() {
+        try {
+            referenciaServidor.obterCarteira(this);
+        } catch (RemoteException e) {
+            System.out.println("Erro ao obter carteira");
+            e.printStackTrace();
+        }
+	}
 }

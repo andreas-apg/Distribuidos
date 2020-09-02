@@ -7,8 +7,8 @@ public class Main {
     
     private static Menu menu;
     private static InterfaceServ referenciaServidor;
-    private static InterfaceCli cliente;
-    private static OrderBuilder orderBuilder;
+    // private static InterfaceCli cliente;
+    private static CliImpl cliente;
 
     public static void main(String[] args) throws Exception {
 
@@ -17,10 +17,8 @@ public class Main {
         referenciaServidor = (InterfaceServ) referenciaServicoNomes.lookup("HomeBroker");
 
         cliente = new CliImpl(referenciaServidor);
-        
 
-
-        menu = new Menu(orderBuilder);
+        menu = new Menu(cliente);
         menu.start();
 
 

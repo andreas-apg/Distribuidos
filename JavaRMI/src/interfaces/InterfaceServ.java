@@ -1,13 +1,16 @@
 package interfaces;
 
 import java.rmi.*;
-import java.util.Date;
+
+import common.Ordem;
 
 // Ex: registrarOrdemDeCompra(usuario ="5765@debian", codigoDaAcao = "AZUL4.SA",
 //          quantidade = 100, valor = 22.37, prazo = 00:05:00);
 
 public interface InterfaceServ extends Remote {
   
+    public void registrarNovoCliente(String usuario) throws RemoteException;
+
     public void inserirNaListaDeInteresse(InterfaceCli referenciaCliente, 
         String usuario, String codigoDaAcao) throws RemoteException;
     
@@ -20,13 +23,8 @@ public interface InterfaceServ extends Remote {
     public void obterCarteira(InterfaceCli referenciaCliente)
         throws RemoteException;
     
-    public void registrarOrdemDeCompra(InterfaceCli referenciaCliente, 
-        String usuario, String codigoDaAcao, int quantidade, 
-        float valor, Date prazo) throws RemoteException;
-    
-    public void registrarOrdemDeVenda(InterfaceCli referenciaCliente, 
-        String usuario, String codigoDaAcao, int quantidade, 
-        float valor, Date prazo) throws RemoteException;
+    public void registrarOrdemDeCompraOuVenda(Ordem ordem)
+        throws RemoteException;
     
     public void obterLimiteDeGanhoEPerda(InterfaceCli referenciaCliente)
         throws RemoteException;

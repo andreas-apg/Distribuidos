@@ -3,47 +3,50 @@ package cliente;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Date;
 import java.util.Scanner;
 
+import common.*;
+import interfaces.InterfaceCli;
 
 public class OrderBuilder {
 
 	Scanner keyboard;
-	Map<String, String> ordem;
+	Ordem ordem;
 
-	public OrderBuilder( String usuario, Scanner keyboard) {
-		
+	public OrderBuilder(String usuario, Scanner keyboard, InterfaceCli cliente) {
+
 		this.keyboard = keyboard;
-		
-		ordem = new LinkedHashMap<String, String>();
-		ordem.put("usuario", usuario);
+
+		ordem = new Ordem();
+		ordem.setUsuario(usuario);
+		ordem.setReferenciaCliente(cliente);
 	}
 
-	public Map<String, String> ordemDeCompraOuVenda() {
+	public Ordem ordemDeCompraOuVenda() {
 
-		ordem.put("tipoDaOrdem", obterTipoDaOrdem());
-		ordem.put("codigoDaAcao", obterCodigoDaAcao());
-		ordem.put("valor", obterValor());
-		ordem.put("quantidade", obterQuantidade());
-		ordem.put("prazo", obterPrazo());
+		ordem.setTipoDaOrdem(obterTipoDaOrdem());
+		ordem.setCodigoDaAcao(obterCodigoDaAcao());
+		ordem.setValor(obterValor());
+		ordem.setQuantidade(obterQuantidade());
+		ordem.setPrazo(obterPrazo());
 
 		return ordem;
 
 	}
 
-	private String obterPrazo() {
+	private Date obterPrazo() {
 		
-		String prazo;
+		String userInput;
+		Date prazo;
 		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
 		
 		while(true) {
 			System.out.println("Digite o prazo de validade da ordem como 'hh:mm:ss' (Ex: 00:05:00");
 
-			prazo = keyboard.nextLine();		
+			userInput = keyboard.nextLine();		
 			try {
-				dateFormat.parse(prazo);
+				prazo = dateFormat.parse(userInput);
 				break;
 			} catch (ParseException e ) {			
 				System.out.println("Prazo invalido");
@@ -53,16 +56,17 @@ public class OrderBuilder {
 		return prazo;
 	}
 
-	private String obterQuantidade() {
+	private int obterQuantidade() {
 
-		String quantidade;
+		String userInput;
+		int quantidade;
 		
 		while (true) {
 			System.out.println("Digite a quantidade (Ex: 100)");
-			quantidade = keyboard.nextLine();
+			userInput = keyboard.nextLine();
 
 			try {
-				Integer.parseInt(quantidade);
+				quantidade = Integer.parseInt(userInput);
 				break;
 			} catch (NumberFormatException e) {
 				System.out.println("Quantidade Invalida");
@@ -72,16 +76,17 @@ public class OrderBuilder {
 		return quantidade;
 	}
 
-	private String obterValor() {
+	private float obterValor() {
 
-		String valor;
+		String userInput;
+		float valor;
 		
 		while(true) {
 			System.out.println("Digite o valor (Ex: 22.37");
-			valor = keyboard.nextLine();
+			userInput = keyboard.nextLine();
 
 			try {
-				Float.parseFloat(valor);
+				valor = Float.parseFloat(userInput);
 				break;
 			} catch (NumberFormatException e) {
 				System.out.println("Valor Invalido");
@@ -92,12 +97,14 @@ public class OrderBuilder {
 	}
 
 	private String obterCodigoDaAcao() {
-		String codigoDaAcao;
+		
+		String userInput;
+		
 		while (true) {
-			System.out.println("Digite o código da acao (Ex: AZUL4");
-			codigoDaAcao = keyboard.nextLine().toLowerCase();		
+			System.out.println("Digite o código da acao (Ex: AZUL4)");
+			userInput = keyboard.nextLine().toLowerCase();		
 			
-			if (codigoDaAcao.length() == 5){			
+			if (userInput.length() == 5){			
 				break;
 			} else {
 				System.out.println("Opcao invalida");
@@ -105,23 +112,23 @@ public class OrderBuilder {
 		};
 
 
-		return null;
+		return userInput;
 	}
 
 	private String obterTipoDaOrdem() {
-		String tipoDaOrdem;
+		String userInput;
 		while(true) {
 			System.out.println("Digite o tipo da ordem (Ex:'Compra' ou 'Venda')");
-			tipoDaOrdem = keyboard.nextLine().toUpperCase();		
+			userInput = keyboard.nextLine().toUpperCase();		
 
-			if (tipoDaOrdem.equals("COMPRA") || tipoDaOrdem.equals("VENDA")){			
+			if (userInput.equals("COMPRA") || userInput.equals("VENDA")){			
 				break;
 			} else {
 				System.out.println("Opcao invalida");
 			}
 		};
 
-		return tipoDaOrdem;
+		return userInput;
 	}
 
 }

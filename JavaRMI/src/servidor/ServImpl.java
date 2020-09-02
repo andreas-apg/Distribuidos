@@ -2,8 +2,8 @@ package servidor;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.time.LocalTime;
 
+import common.Ordem;
 import interfaces.InterfaceCli;
 import interfaces.InterfaceServ;
 
@@ -22,6 +22,16 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ{
 	}
 
 	@Override
+	public void registrarNovoCliente(String usuario){
+		System.out.printf("usuário %s se conectou", usuario);
+	}
+
+	@Override
+	public void registrarOrdemDeCompraOuVenda(Ordem ordem) throws RemoteException {
+			ordem.getReferenciaCliente().notificar("Servidor recebeu a ordem");
+		}
+
+	@Override
 	public void inserirNaListaDeInteresse(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
 			throws RemoteException {
 		// TODO Auto-generated method stub
@@ -37,20 +47,6 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ{
 
 	@Override
 	public void obterCotacoesDaListaDeInteresse(InterfaceCli referenciaCliente) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void registrarOrdemDeCompra(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao,
-			int quantidade, float valor, LocalTime prazo) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void registrarOrdemDeVenda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao,
-			int quantidade, float valor, LocalTime prazo) throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -81,6 +77,22 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ{
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void obterCarteira(InterfaceCli referenciaCliente) throws RemoteException {
+		// TODO Auto-generated method stub
+		// Gio: da uma olhada na classe StringBuilder, eu uso ela na classe Main.
+
+		referenciaCliente.notificar("retornando acoes");
+
+	}
+
+	@Override
+	public void obterLimiteDeGanhoEPerda(InterfaceCli referenciaCliente) throws RemoteException {
+		// TODO Auto-generated method stub
+
+		referenciaCliente.notificar("retornando Limites");
 	}
 
 }

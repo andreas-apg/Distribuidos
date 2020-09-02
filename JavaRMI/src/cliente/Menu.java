@@ -1,24 +1,23 @@
 package cliente;
 import java.util.*;
 
-import interfaces.InterfaceCli;
-
+import common.Ordem;
 import java.lang.management.ManagementFactory;
 
 public class Menu {
 
     //cliente emite ordem de compra ou venda (usuario, codigo acao, quantidade, valor, prazo)
 
-    private static String myUserName;
+    private static String usuario;
     private StringBuilder menuString;
-    private static Scanner keyboard;
-    private OrderBuilder orderBuilder;
+    private static Scanner keyboard;    
+    private CliImpl cliente;
 
-    public Menu (OrderBuilder orderBuilder) {
+    public Menu (CliImpl cliente) {
 
-        this.orderBuilder = orderBuilder;
+        this.cliente = cliente;
 
-        myUserName = ManagementFactory.getRuntimeMXBean().getName();
+        usuario = ManagementFactory.getRuntimeMXBean().getName();
 
         buildMenuString();
         
@@ -29,7 +28,7 @@ public class Menu {
 
     public void start() throws Exception {
 
-        System.out.println("Welcomed " + myUserName + "!");
+        System.out.println("Welcomed " + usuario + "!");
         System.out.println("Digite o numero da opcao desejada: ");
         System.out.println(menuString);
 
@@ -37,7 +36,7 @@ public class Menu {
 
         while(true){                    
 
-            System.out.print(myUserName + ": ");
+            System.out.print(usuario + ": ");
             //keyboard = new Scanner(System.in);
             String option = keyboard.nextLine();
             
@@ -48,10 +47,12 @@ public class Menu {
 
 
             switch (option) {
+                
                 // 1) Emitir ordem de compra ou venda;
                 case "1":
-                    Map<String, String> ordem = orderBuilder.ordemDeCompraOuVenda();
-                    //cliente.emitirOrdemDeCompraOuVenda(ordem);
+                    OrderBuilder orderBuilder = new OrderBuilder(usuario, keyboard, cliente);
+                    Ordem ordem = orderBuilder.ordemDeCompraOuVenda();
+                    cliente.emitirOrdemDeCompraOuVenda(ordem);
                     break;
                 
                 // 2) Visualizar minha Lista de Cotacoes;
@@ -67,7 +68,7 @@ public class Menu {
                 
                 // 4) Visualizar minha carteira de acoes;   
                 case "4":
-                    // cliente.obterCarteira();                    
+                    cliente.obterCarteira();                    
                     break;
                 
                 // 5) Visualizar minha lista de limite de ganho/perca;    
