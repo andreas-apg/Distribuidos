@@ -52,28 +52,28 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ{
 	}
 
 	@Override
-	public void inserirNaListaLimiteDePerda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
+	public void inserirNaListaDeLimiteDePerda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void removerDaListaLimiteDePerda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
+	public void removerDaListaDeLimiteDePerda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void inserirNaListaLimiteDeGanho(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
+	public void inserirNaListaDeLimiteDeGanho(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void removerDaListaLimiteDeGanho(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
+	public void removerDaListaDeLimiteDeGanho(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
 			throws RemoteException {
 		// TODO Auto-generated method stub
 		
@@ -89,7 +89,7 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ{
 	}
 
 	@Override
-	public void obterLimiteDeGanhoEPerda(InterfaceCli referenciaCliente) throws RemoteException {
+	public void obterListaDeLimiteDeGanhoEPerda(InterfaceCli referenciaCliente) throws RemoteException {
 		// TODO Auto-generated method stub
 
 		referenciaCliente.notificar("retornando Limites");

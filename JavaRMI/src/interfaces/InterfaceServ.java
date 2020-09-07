@@ -9,8 +9,10 @@ import common.Ordem;
 
 public interface InterfaceServ extends Remote {
   
+    // Metodo chamado no servidor por cada cliente quando ele "entra" no sistema
     public void registrarNovoCliente(String usuario) throws RemoteException;
 
+    // Lista de acoes em que o cliente tem interesse em acompanhar
     public void inserirNaListaDeInteresse(InterfaceCli referenciaCliente, 
         String usuario, String codigoDaAcao) throws RemoteException;
     
@@ -20,25 +22,27 @@ public interface InterfaceServ extends Remote {
     public void obterCotacoesDaListaDeInteresse(InterfaceCli referenciaCliente)
         throws RemoteException;
 
+    // Carteira: lista de acoes que o cliente possui (comprou)
     public void obterCarteira(InterfaceCli referenciaCliente)
         throws RemoteException;
     
     public void registrarOrdemDeCompraOuVenda(Ordem ordem)
         throws RemoteException;
     
-    public void obterLimiteDeGanhoEPerda(InterfaceCli referenciaCliente)
+    // Lista de acoes que o cliente deseja ser notificado quando o preco atinge determinado valor
+    public void obterListaDeLimiteDeGanhoEPerda(InterfaceCli referenciaCliente)
         throws RemoteException;
 
-    public void inserirNaListaLimiteDePerda(InterfaceCli referenciaCliente,
+    public void inserirNaListaDeLimiteDePerda(InterfaceCli referenciaCliente,
         String usuario, String codigoDaAcao) throws RemoteException;
     
-    public void removerDaListaLimiteDePerda(InterfaceCli referenciaCliente,
+    public void removerDaListaDeLimiteDePerda(InterfaceCli referenciaCliente,
         String usuario, String codigoDaAcao) throws RemoteException;    
     
-    public void inserirNaListaLimiteDeGanho(InterfaceCli referenciaCliente,
+    public void inserirNaListaDeLimiteDeGanho(InterfaceCli referenciaCliente,
         String usuario, String codigoDaAcao) throws RemoteException;
     
-    public void removerDaListaLimiteDeGanho(InterfaceCli referenciaCliente,
+    public void removerDaListaDeLimiteDeGanho(InterfaceCli referenciaCliente,
         String usuario, String codigoDaAcao) throws RemoteException;    
 
 }

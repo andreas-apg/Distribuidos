@@ -6,36 +6,37 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-import common.*;
 import interfaces.InterfaceCli;
 
-public class OrderBuilder {
+public class ConstrutorDeMsg {
 
-	Scanner keyboard;
-	Ordem ordem;
+    private Scanner keyboard;
+    private String usuario;
+    private InterfaceCli cliente;
 
-	public OrderBuilder(String usuario, Scanner keyboard, InterfaceCli cliente) {
+    public ConstrutorDeMsg(String usuario, Scanner keyboard, InterfaceCli cliente) {
+        this.usuario = usuario;
+        this.keyboard = keyboard;
+        this.cliente = cliente;
+    }
 
-		this.keyboard = keyboard;
+    public InterfaceCli getCliente() {
+        return cliente;
+    }
 
-		ordem = new Ordem();
-		ordem.setUsuario(usuario);
-		ordem.setReferenciaCliente(cliente);
-	}
+    public void setCliente(InterfaceCli cliente) {
+        this.cliente = cliente;
+    }
 
-	public Ordem ordemDeCompraOuVenda() {
+    public String getUsuario() {
+        return usuario;
+    }
 
-		ordem.setTipoDaOrdem(obterTipoDaOrdem());
-		ordem.setCodigoDaAcao(obterCodigoDaAcao());
-		ordem.setValor(obterValor());
-		ordem.setQuantidade(obterQuantidade());
-		ordem.setPrazo(obterPrazo());
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
-		return ordem;
-
-	}
-
-	private Date obterPrazo() {
+    Date obterPrazo() {
 		
 		String userInput;
 		Date prazo;
@@ -56,7 +57,7 @@ public class OrderBuilder {
 		return prazo;
 	}
 
-	private int obterQuantidade() {
+	int obterQuantidade() {
 
 		String userInput;
 		int quantidade;
@@ -76,7 +77,7 @@ public class OrderBuilder {
 		return quantidade;
 	}
 
-	private float obterValor() {
+	float obterValor() {
 
 		String userInput;
 		float valor;
@@ -96,7 +97,7 @@ public class OrderBuilder {
 		return valor;
 	}
 
-	private String obterCodigoDaAcao() {
+	public String obterCodigoDaAcao() {
 		
 		String userInput;
 		
@@ -115,13 +116,29 @@ public class OrderBuilder {
 		return userInput;
 	}
 
-	private String obterTipoDaOrdem() {
+	String obterTipoDaOrdem() {
 		String userInput;
 		while(true) {
-			System.out.println("Digite o tipo da ordem (Ex:'Compra' ou 'Venda')");
+			System.out.println("Digite o tipo da ordem (Ex:'comprar' ou 'vender')");
 			userInput = keyboard.nextLine().toUpperCase();		
 
-			if (userInput.equals("COMPRA") || userInput.equals("VENDA")){			
+			if (userInput.equals("COMPRAR") || userInput.equals("VENDER")){			
+				break;
+			} else {
+				System.out.println("Opcao invalida");
+			}
+		};
+
+		return userInput;
+    }
+    
+    String obterTipoDaAtualizacao() {
+		String userInput;
+		while(true) {
+			System.out.println("Digite o tipo da ordem (Ex:'inserir' ou 'vender')");
+			userInput = keyboard.nextLine().toUpperCase();		
+
+			if (userInput.equals("INSERIR") || userInput.equals("VENDER")){			
 				break;
 			} else {
 				System.out.println("Opcao invalida");
@@ -130,5 +147,4 @@ public class OrderBuilder {
 
 		return userInput;
 	}
-
 }

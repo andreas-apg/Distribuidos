@@ -15,13 +15,13 @@ import interfaces.InterfaceCli;
  * isso é gravado em uma instância da 
  * classe transação.
  */
-public class Ordem implements Serializable{
+public class Ordem implements Serializable {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private int id;
 
 	private InterfaceCli referenciaCliente;
@@ -38,6 +38,14 @@ public class Ordem implements Serializable{
 
 	public String getTipoDaOrdem() {
 		return tipoDaOrdem;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public InterfaceCli getReferenciaCliente() {

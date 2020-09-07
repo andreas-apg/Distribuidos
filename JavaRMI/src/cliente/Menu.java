@@ -12,6 +12,7 @@ public class Menu {
     private StringBuilder menuString;
     private static Scanner keyboard;    
     private CliImpl cliente;
+    ConstrutorDeMsg construtorDeMsg;
 
     public Menu (CliImpl cliente) {
 
@@ -50,20 +51,21 @@ public class Menu {
                 
                 // 1) Emitir ordem de compra ou venda;
                 case "1":
-                    OrderBuilder orderBuilder = new OrderBuilder(usuario, keyboard, cliente);
-                    Ordem ordem = orderBuilder.ordemDeCompraOuVenda();
+                    construtorDeMsg = new ConstrutorDeMsg(usuario, keyboard, cliente);
+                    ConstrutorDeOrdem construtorDeOrdem = new ConstrutorDeOrdem(construtorDeMsg);
+                    Ordem ordem = construtorDeOrdem.ordemDeCompraOuVenda();
                     cliente.emitirOrdemDeCompraOuVenda(ordem);
                     break;
                 
-                // 2) Visualizar minha Lista de Cotacoes;
+                // 2) Visualizar minha Lista de Interesse/Cotacoes;
                 case "2":
-                    //cliente.obterCotacoesDaListaDeInteresse();
+                    cliente.obterCotacoesDaListaDeInteresse();
                     break;
                 
-                // 3) Atualizar minha Lista de Cotacoes;
+                // 3) Atualizar minha Lista de Interesse/Cotacoes;
                 case "3":
-                    // Map ordem = orderBuilder.atualizarListaDeInteresse();
-                    // cliente.atualizarListaDeInteresse();
+                    construtorDeMsg = new ConstrutorDeMsg(usuario, keyboard, cliente);
+                    //cliente.atualizarListaDeInteresse();
                     break;
                 
                 // 4) Visualizar minha carteira de acoes;   

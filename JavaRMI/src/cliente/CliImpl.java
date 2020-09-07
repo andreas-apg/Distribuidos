@@ -16,10 +16,10 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
     protected CliImpl(InterfaceServ referenciaServidor) throws RemoteException {
         this.referenciaServidor = referenciaServidor;
         referenciaServidor.registrarNovoCliente("giovane");
-        //referenciaServidor.registrarInteresse("Oi", this);
     }
 
 
+    
     @Override
     public void notificar(String texto) throws RemoteException {
         System.out.println("Notificacao recebida: " + texto);
@@ -42,6 +42,17 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
             referenciaServidor.obterCarteira(this);
         } catch (RemoteException e) {
             System.out.println("Erro ao obter carteira");
+            e.printStackTrace();
+        }
+	}
+
+
+
+	public void obterCotacoesDaListaDeInteresse() {
+        try {
+            referenciaServidor.obterCotacoesDaListaDeInteresse(this);
+        } catch (RemoteException e) {
+            System.out.println("Erro ao obter cotacoes da lista de interesse");
             e.printStackTrace();
         }
 	}
