@@ -29,7 +29,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
     
 	public void emitirOrdemDeCompraOuVenda(Ordem ordem) {
         try {
-            referenciaServidor.registrarOrdemDeCompraOuVenda(ordem);
+            referenciaServidor.registrarOrdem(ordem);
         } catch (RemoteException e) {
             System.out.println("Erro ao emitir ordem de Compra / Venda");
             e.printStackTrace();

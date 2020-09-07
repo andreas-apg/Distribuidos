@@ -23,7 +23,7 @@ public interface InterfaceServ extends Remote {
     public void obterCarteira(InterfaceCli referenciaCliente)
         throws RemoteException;
     
-    public void registrarOrdemDeCompraOuVenda(Ordem ordem)
+    public void registrarOrdem(Ordem ordem)
         throws RemoteException;
     
     public void obterLimiteDeGanhoEPerda(InterfaceCli referenciaCliente)

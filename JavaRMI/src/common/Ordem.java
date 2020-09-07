@@ -32,10 +32,6 @@ public class Ordem implements Serializable{
 	private int quantidade;
 	private Date prazo;
 
-	// TODO: Gio: acho que isso nao pertence a essa classe, mas aa classe acima dela
-	public static ArrayList<Ordem> filaDeCompra;
-	public static ArrayList<Ordem> filaDeVenda;
-
 	public String getTipoDaOrdem() {
 		return tipoDaOrdem;
 	}
