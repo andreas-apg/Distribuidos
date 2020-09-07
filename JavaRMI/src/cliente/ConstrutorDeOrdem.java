@@ -5,26 +5,26 @@ import common.*;
 public class ConstrutorDeOrdem {
 
 	Ordem ordem;
-	ConstrutorDeMsg msg;
+	ConstrutorDeMsg construtorDeMsg;
 
-	public ConstrutorDeOrdem(ConstrutorDeMsg msg) {
+	public ConstrutorDeOrdem(ConstrutorDeMsg construtorDeMsg) {
 
 
 		ordem = new Ordem();
-		this.msg = msg;
+		this.construtorDeMsg = construtorDeMsg;
 		
 	}
 
-	public Ordem ordemDeCompraOuVenda() {
+	public Ordem obterOrdemDoUsuario() {
 
-		ordem.setUsuario(msg.getUsuario());
-		ordem.setReferenciaCliente(msg.getCliente());
+		ordem.setUsuario(construtorDeMsg.getUsuario());
+		ordem.setReferenciaCliente(construtorDeMsg.getCliente());
 
-		ordem.setTipoDaOrdem(msg.obterTipoDaOrdem());
-		ordem.setCodigoDaAcao(msg.obterCodigoDaAcao());
-		ordem.setValor(msg.obterValor());
-		ordem.setQuantidade(msg.obterQuantidade());
-		ordem.setPrazo(msg.obterPrazo());
+		ordem.setTipoDaOrdem(construtorDeMsg.obterTipoDaOrdem());
+		ordem.setCodigoDaAcao(construtorDeMsg.obterCodigoDaAcao());
+		ordem.setValor(construtorDeMsg.obterValor());
+		ordem.setQuantidade(construtorDeMsg.obterQuantidade());
+		ordem.setPrazo(construtorDeMsg.obterPrazo());
 
 		return ordem;
 

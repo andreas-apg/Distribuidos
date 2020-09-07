@@ -2,7 +2,7 @@ package interfaces;
 
 import java.rmi.*;
 
-import common.Ordem;
+import common.*;
 
 // Ex: registrarOrdemDeCompra(usuario ="5765@debian", codigoDaAcao = "AZUL4.SA",
 //          quantidade = 100, valor = 22.37, prazo = 00:05:00);
@@ -19,6 +19,9 @@ public interface InterfaceServ extends Remote {
     public void removerDaListaDeInteresse(InterfaceCli referenciaCliente, 
         String usuario, String codigoDaAcao) throws RemoteException;
     
+    public void atualizarListaDeInteresse(Interesse interesse)
+        throws RemoteException;
+
     public void obterCotacoesDaListaDeInteresse(InterfaceCli referenciaCliente)
         throws RemoteException;
 

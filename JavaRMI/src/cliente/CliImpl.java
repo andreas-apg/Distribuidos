@@ -5,8 +5,10 @@ import interfaces.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import common.Interesse;
 import common.Ordem;
 
+// Essa classe é responsável pela comunicacao com o servidor
 public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +53,17 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 	public void obterCotacoesDaListaDeInteresse() {
         try {
             referenciaServidor.obterCotacoesDaListaDeInteresse(this);
+        } catch (RemoteException e) {
+            System.out.println("Erro ao obter cotacoes da lista de interesse");
+            e.printStackTrace();
+        }
+	}
+
+
+
+	public void atualizarListaDeInteresse(Interesse interesse) {
+        try {
+            referenciaServidor.atualizarListaDeInteresse(interesse);;
         } catch (RemoteException e) {
             System.out.println("Erro ao obter cotacoes da lista de interesse");
             e.printStackTrace();

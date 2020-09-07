@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import interfaces.InterfaceCli;
 
+// Classe auxiliar para obter input do usuario com validacao dos dados
 public class ConstrutorDeMsg {
 
     private Scanner keyboard;

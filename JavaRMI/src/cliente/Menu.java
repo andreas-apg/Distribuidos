@@ -1,9 +1,12 @@
 package cliente;
+
 import java.util.*;
 
+import common.Interesse;
 import common.Ordem;
 import java.lang.management.ManagementFactory;
 
+// Classe para o usuario navegar pelo menu
 public class Menu {
 
     //cliente emite ordem de compra ou venda (usuario, codigo acao, quantidade, valor, prazo)
@@ -53,7 +56,7 @@ public class Menu {
                 case "1":
                     construtorDeMsg = new ConstrutorDeMsg(usuario, keyboard, cliente);
                     ConstrutorDeOrdem construtorDeOrdem = new ConstrutorDeOrdem(construtorDeMsg);
-                    Ordem ordem = construtorDeOrdem.ordemDeCompraOuVenda();
+                    Ordem ordem = construtorDeOrdem.obterOrdemDoUsuario();
                     cliente.emitirOrdemDeCompraOuVenda(ordem);
                     break;
                 
@@ -65,7 +68,9 @@ public class Menu {
                 // 3) Atualizar minha Lista de Interesse/Cotacoes;
                 case "3":
                     construtorDeMsg = new ConstrutorDeMsg(usuario, keyboard, cliente);
-                    //cliente.atualizarListaDeInteresse();
+                    ConstrutorDeInteresse construtorDeInteresse = new ConstrutorDeInteresse(construtorDeMsg);
+                    Interesse interesse = construtorDeInteresse.obterInteresseDoUsuario();
+                    cliente.atualizarListaDeInteresse(interesse);
                     break;
                 
                 // 4) Visualizar minha carteira de acoes;   

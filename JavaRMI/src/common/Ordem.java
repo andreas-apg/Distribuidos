@@ -1,10 +1,8 @@
 package common;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-import interfaces.InterfaceCli;
 
 /* classe para uma ordem. Um usuário
  * faz uma ordem de compra ou de venda
@@ -15,19 +13,14 @@ import interfaces.InterfaceCli;
  * isso é gravado em uma instância da 
  * classe transação.
  */
-public class Ordem implements Serializable {
+public class Ordem extends Base {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private int id;
-
-	private InterfaceCli referenciaCliente;
-	private String tipoDaOrdem; // compra ou venda
-	private String codigoDaAcao; // nome da ação ex PETR4
-	private String usuario; // quem fez a ordem
+	private String tipoDaOrdem; // comprar ou vender
 	private float valor; // em reais
 	private int quantidade;
 	private Date prazo;
@@ -38,22 +31,6 @@ public class Ordem implements Serializable {
 
 	public String getTipoDaOrdem() {
 		return tipoDaOrdem;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public InterfaceCli getReferenciaCliente() {
-		return referenciaCliente;
-	}
-
-	public void setReferenciaCliente(InterfaceCli referenciaCliente) {
-		this.referenciaCliente = referenciaCliente;
 	}
 
 	public Date getPrazo() {
@@ -78,22 +55,6 @@ public class Ordem implements Serializable {
 
 	public void setValor(float valor) {
 		this.valor = valor;
-	}
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-
-	public String getCodigoDaAcao() {
-		return codigoDaAcao;
-	}
-
-	public void setCodigoDaAcao(String codigoDaAcao) {
-		this.codigoDaAcao = codigoDaAcao;
 	}
 
 	public void setTipoDaOrdem(String tipoDaOrdem) {
