@@ -43,20 +43,6 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void inserirNaListaDeInteresse(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removerDaListaDeInteresse(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void obterCotacoesDaListaDeInteresse(InterfaceCli referenciaCliente) throws RemoteException {
 		// TODO Auto-generated method stub
 

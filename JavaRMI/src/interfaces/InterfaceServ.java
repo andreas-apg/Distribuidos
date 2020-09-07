@@ -12,13 +12,7 @@ public interface InterfaceServ extends Remote {
     // Metodo chamado no servidor por cada cliente quando ele "entra" no sistema
     public void registrarNovoCliente(String usuario) throws RemoteException;
 
-    // Lista de acoes em que o cliente tem interesse em acompanhar
-    public void inserirNaListaDeInteresse(InterfaceCli referenciaCliente, 
-        String usuario, String codigoDaAcao) throws RemoteException;
-    
-    public void removerDaListaDeInteresse(InterfaceCli referenciaCliente, 
-        String usuario, String codigoDaAcao) throws RemoteException;
-    
+    // Lista de acoes em que o cliente tem interesse em acompanhar   
     public void atualizarListaDeInteresse(Interesse interesse)
         throws RemoteException;
 
