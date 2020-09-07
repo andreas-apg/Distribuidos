@@ -44,7 +44,7 @@ public class ConstrutorDeMsg {
 		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
 		
 		while(true) {
-			System.out.println("Digite o prazo de validade da ordem como 'hh:mm:ss' (Ex: 00:05:00");
+			System.out.println("Digite o prazo de validade da ordem como 'hh:mm:ss' (Ex: 00:05:00)");
 
 			userInput = keyboard.nextLine();		
 			try {
@@ -84,7 +84,7 @@ public class ConstrutorDeMsg {
 		float valor;
 		
 		while(true) {
-			System.out.println("Digite o valor (Ex: 22.37");
+			System.out.println("Digite o valor (Ex: 22.37)");
 			userInput = keyboard.nextLine();
 
 			try {
@@ -103,7 +103,7 @@ public class ConstrutorDeMsg {
 		String userInput;
 		
 		while (true) {
-			System.out.println("Digite o código da acao (Ex: AZUL4)");
+			System.out.println("Digite o código da acao (Ex: azul4)");
 			userInput = keyboard.nextLine().toLowerCase();		
 			
 			if (userInput.length() == 5){			
@@ -121,9 +121,9 @@ public class ConstrutorDeMsg {
 		String userInput;
 		while(true) {
 			System.out.println("Digite o tipo da ordem (Ex:'comprar' ou 'vender')");
-			userInput = keyboard.nextLine().toUpperCase();		
+			userInput = keyboard.nextLine().toLowerCase();		
 
-			if (userInput.equals("COMPRAR") || userInput.equals("VENDER")){			
+			if (userInput.equals("comprar") || userInput.equals("vender")){			
 				break;
 			} else {
 				System.out.println("Opcao invalida");
@@ -136,10 +136,26 @@ public class ConstrutorDeMsg {
     String obterTipoDaAtualizacao() {
 		String userInput;
 		while(true) {
-			System.out.println("Digite o tipo da ordem (Ex:'inserir' ou 'vender')");
-			userInput = keyboard.nextLine().toUpperCase();		
+			System.out.println("Digite o tipo da atualizacao (Ex:'inserir' ou 'remover')");
+			userInput = keyboard.nextLine().toLowerCase();		
 
-			if (userInput.equals("INSERIR") || userInput.equals("VENDER")){			
+			if (userInput.equals("inserir") || userInput.equals("remover")){			
+				break;
+			} else {
+				System.out.println("Opcao invalida");
+			}
+		};
+
+		return userInput;
+	}
+
+	public String obterTipoDoLimite() {
+		String userInput;
+		while(true) {
+			System.out.println("Digite o tipo do limite (Ex:'ganho' ou 'perda')");
+			userInput = keyboard.nextLine().toLowerCase();		
+
+			if (userInput.equals("ganho") || userInput.equals("perda")){			
 				break;
 			} else {
 				System.out.println("Opcao invalida");

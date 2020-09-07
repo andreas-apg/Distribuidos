@@ -1,12 +1,11 @@
 package cliente;
 
 import interfaces.*;
+import common.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import common.Interesse;
-import common.Ordem;
 
 // Essa classe é responsável pela comunicacao com o servidor
 public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
@@ -65,8 +64,30 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
         try {
             referenciaServidor.atualizarListaDeInteresse(interesse);;
         } catch (RemoteException e) {
-            System.out.println("Erro ao obter cotacoes da lista de interesse");
+            System.out.println("Erro ao obter atualizar lista de interesse");
             e.printStackTrace();
         }
 	}
+
+
+
+	public void obterListaDeLimite() {
+        try {
+            referenciaServidor.obterListaDeLimite(this);
+        } catch (RemoteException e) {
+            System.out.println("Erro ao obter lista de limite de ganho e perda");
+            e.printStackTrace();
+        }
+	}
+
+
+
+	public void atualizarListaDeLimite(Limite limite) {
+        try {
+            referenciaServidor.atualizarListaDeLimite(limite);
+        } catch (RemoteException e) {
+            System.out.println("Erro ao obter atualizar lista de limite de ganho e perda");
+            e.printStackTrace();
+        }
+    }
 }

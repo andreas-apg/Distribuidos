@@ -49,34 +49,6 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void inserirNaListaDeLimiteDePerda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removerDaListaDeLimiteDePerda(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void inserirNaListaDeLimiteDeGanho(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removerDaListaDeLimiteDeGanho(InterfaceCli referenciaCliente, String usuario, String codigoDaAcao)
-			throws RemoteException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void obterCarteira(InterfaceCli referenciaCliente) throws RemoteException {
 		// TODO Auto-generated method stub
 		// Gio: da uma olhada na classe StringBuilder, eu uso ela na classe Main.
@@ -86,7 +58,7 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void obterListaDeLimiteDeGanhoEPerda(InterfaceCli referenciaCliente) throws RemoteException {
+	public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {
 		// TODO Auto-generated method stub
 
 		referenciaCliente.notificar("retornando Limites");
@@ -94,6 +66,12 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	@Override
 	public void atualizarListaDeInteresse(Interesse interesse) throws RemoteException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void atualizarListaDeLimite(Limite limite) throws RemoteException {
 		// TODO Auto-generated method stub
 
 	}

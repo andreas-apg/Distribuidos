@@ -9,7 +9,7 @@ public class Limite extends Base {
     private String tipoDoLimite; // ganho ou perda
     private float valor; // em reais
 
-    public String getTipoDaAtualizacao() {
+    public String getTipoDoAtualizacao() {
         return tipoDaAtualizacao;
     }
 

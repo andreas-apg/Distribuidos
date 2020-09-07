@@ -1,9 +1,7 @@
 package cliente;
 
 import java.util.*;
-
-import common.Interesse;
-import common.Ordem;
+import common.*;
 import java.lang.management.ManagementFactory;
 
 // Classe para o usuario navegar pelo menu
@@ -33,12 +31,13 @@ public class Menu {
     public void start() throws Exception {
 
         System.out.println("Welcomed " + usuario + "!");
-        System.out.println("Digite o numero da opcao desejada: ");
-        System.out.println(menuString);
-
+        
         System.out.println();
 
         while(true){                    
+
+            System.out.println("Digite o numero da opcao desejada: ");
+            System.out.println(menuString);
 
             System.out.print(usuario + ": ");
             //keyboard = new Scanner(System.in);
@@ -80,13 +79,15 @@ public class Menu {
                 
                 // 5) Visualizar minha lista de limite de ganho/perca;    
                 case "5":
-                    // cliente.obterListaDeGanhoEPerda();
+                    cliente.obterListaDeLimite();
                     break;
                 
                 // 6) Atualizar minha lista de limite de ganho/perca;
                 case "6":
-                    // Map ordem = orderBuilder.atualizarListaDeLimiteDeGanhoEPerda();
-                    //  cliente.atualizarListaDeLimiteDeGanhoEPerda();                
+                    construtorDeMsg = new ConstrutorDeMsg(usuario, keyboard, cliente);
+                    ConstrutorDeLimite construtorDeLimite = new ConstrutorDeLimite(construtorDeMsg);
+                    Limite limite = construtorDeLimite.obterLimiteDoUsuario();
+                    cliente.atualizarListaDeLimite(limite);
                     break;
             
                 // 7) Sair;
@@ -108,8 +109,8 @@ public class Menu {
         menuString = new StringBuilder();
 
         menuString.append("1) Emitir ordem de compra ou venda;\n");
-        menuString.append("2) Visualizar minha Lista de Cotacoes;\n");
-        menuString.append("3) Atualizar minha Lista de Cotacoes;\n");
+        menuString.append("2) Visualizar minha lista de interesse de cotacao;\n");
+        menuString.append("3) Atualizar minha lista de interesse de cotacao;\n");
         menuString.append("4) Visualizar minha carteira de acoes;\n");
         menuString.append("5) Visualizar minha lista de limite de ganho/perca;\n");
         menuString.append("6) Atualizar minha lista de limite de ganho/perca;\n");

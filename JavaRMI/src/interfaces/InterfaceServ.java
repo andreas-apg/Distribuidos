@@ -27,19 +27,10 @@ public interface InterfaceServ extends Remote {
         throws RemoteException;
     
     // Lista de acoes que o cliente deseja ser notificado quando o preco atinge determinado valor
-    public void obterListaDeLimiteDeGanhoEPerda(InterfaceCli referenciaCliente)
+    public void obterListaDeLimite(InterfaceCli referenciaCliente)
         throws RemoteException;
 
-    public void inserirNaListaDeLimiteDePerda(InterfaceCli referenciaCliente,
-        String usuario, String codigoDaAcao) throws RemoteException;
-    
-    public void removerDaListaDeLimiteDePerda(InterfaceCli referenciaCliente,
-        String usuario, String codigoDaAcao) throws RemoteException;    
-    
-    public void inserirNaListaDeLimiteDeGanho(InterfaceCli referenciaCliente,
-        String usuario, String codigoDaAcao) throws RemoteException;
-    
-    public void removerDaListaDeLimiteDeGanho(InterfaceCli referenciaCliente,
-        String usuario, String codigoDaAcao) throws RemoteException;    
+    public void atualizarListaDeLimite(Limite limite)
+        throws RemoteException; 
 
 }
