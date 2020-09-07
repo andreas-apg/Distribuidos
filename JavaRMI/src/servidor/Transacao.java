@@ -1,7 +1,9 @@
 package servidor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.ArrayList;
+
+import common.Ordem;
 
 /* classe para a transação de uma ação.
  * Para saber a cotação de uma ação,
@@ -15,7 +17,10 @@ public class Transacao {
 	String acao; 		// ie PETR4
 	float preco; 		// em reais
 	int quantidade; 	// número inteiro 
-	LocalDateTime hora;
+	Date hora;
 	
 	public static ArrayList<Transacao> transacoes;
+	// A: movi as filas de compra e venda pra essa classe
+	public static ArrayList<Ordem> filaDeCompra;
+	public static ArrayList<Ordem> filaDeVenda;
 }

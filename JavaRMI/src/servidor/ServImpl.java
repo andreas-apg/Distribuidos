@@ -3,10 +3,8 @@ package servidor;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import common.Interesse;
-import common.Ordem;
-import interfaces.InterfaceCli;
-import interfaces.InterfaceServ;
+import common.*;
+import interfaces.*;
 
 public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
@@ -28,8 +26,20 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void registrarOrdemDeCompraOuVenda(Ordem ordem) throws RemoteException {
-		ordem.getReferenciaCliente().notificar("Servidor recebeu a ordem");
+	public void registrarOrdem(Ordem ordem) throws RemoteException {
+			ordem.getReferenciaCliente().notificar("Servidor recebeu a ordem");
+			/* A: ordem.tipoDaOrdem determinará para qual fila
+			 * a ordem será adicionada. O getter getTipoDaOrdem()
+			 * é utilizado.
+			 */
+			if(ordem.getTipoDaOrdem().equals("compra")) {
+				Transacao.filaDeCompra.add(ordem);
+				ordem.getReferenciaCliente().notificar("Ordem de compra registrada!");
+			}
+			else if(ordem.getTipoDaOrdem().equals("venda")){
+				Transacao.filaDeVenda.add(ordem);
+				ordem.getReferenciaCliente().notificar("Ordem de venda registrada!");
+			}
 	}
 
 	@Override

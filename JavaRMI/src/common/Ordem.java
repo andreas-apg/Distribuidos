@@ -1,6 +1,5 @@
 package common;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -24,10 +23,6 @@ public class Ordem extends Base {
 	private float valor; // em reais
 	private int quantidade;
 	private Date prazo;
-
-	// TODO: Gio: acho que isso nao pertence a essa classe, mas aa classe acima dela
-	public static ArrayList<Ordem> filaDeCompra;
-	public static ArrayList<Ordem> filaDeVenda;
 
 	public String getTipoDaOrdem() {
 		return tipoDaOrdem;
