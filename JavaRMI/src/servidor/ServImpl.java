@@ -12,17 +12,16 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	Transacao transacao = new Transacao();
 	public ServImpl() throws RemoteException {
-		System.out.println("Executing ServIml...");
-
+		System.out.println("Executing ServImpl...");
+		transacao.start();
 		// creates all lists and queues
-
 	}
 
 	@Override
 	public void registrarNovoCliente(String usuario) {
-		System.out.printf("usuário %s se conectou", usuario);
+		System.out.printf("usuário %s se conectou!\n", usuario);
 	}
 
 	@Override

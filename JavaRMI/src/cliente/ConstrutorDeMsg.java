@@ -120,16 +120,15 @@ public class ConstrutorDeMsg {
 	String obterTipoDaOrdem() {
 		String userInput;
 		while(true) {
-			System.out.println("Digite o tipo da ordem (Ex:'comprar' ou 'vender')");
+			System.out.println("Digite o tipo da ordem (Ex:'compra' ou 'venda')");
 			userInput = keyboard.nextLine().toLowerCase();		
 
-			if (userInput.equals("comprar") || userInput.equals("vender")){			
+			if (userInput.equals("compra") || userInput.equals("venda")){			
 				break;
 			} else {
 				System.out.println("Opcao invalida");
 			}
 		};
-
 		return userInput;
     }
     

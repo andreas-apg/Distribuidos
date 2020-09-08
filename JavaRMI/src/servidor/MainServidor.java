@@ -15,7 +15,6 @@ public class MainServidor {
             Registry referenciaServicoNomes = LocateRegistry.createRegistry(portaSN);
             
             InterfaceServ referenciaServidor = new ServImpl();
-            
             referenciaServicoNomes.rebind("HomeBroker", referenciaServidor);
 
         } catch (RemoteException e) {
