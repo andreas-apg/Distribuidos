@@ -90,6 +90,7 @@ public class Transacao extends Thread{
     		* estiveram vazias.
     		*/ 
     		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
+    			outerLoop:
 			    for(Ordem compra : filaDeCompra) {
 			    	for(Ordem venda : filaDeVenda) {
 			    		/* A: iterando pela lista de compra e venda, pra ver
@@ -100,7 +101,8 @@ public class Transacao extends Thread{
 			    			* for maior ou igual ao preço mínimo de venda.
 			    			*/
 			    			if(compra.getValor() >= venda.getValor()) {
-			    					realizaCompra(compra, venda);			   
+			    					realizaCompra(compra, venda);
+			    					break outerLoop;
 			    			}
 			    		}			    			
 			    	}
