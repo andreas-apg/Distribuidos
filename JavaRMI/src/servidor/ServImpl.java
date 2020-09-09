@@ -32,11 +32,11 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 			 * é utilizado.
 			 */
 			if(ordem.getTipoDaOrdem().equals("compra")) {
-				Transacao.filaDeCompra.add(ordem);
+				Transacao.adicionaCompra(ordem);
 				ordem.getReferenciaCliente().notificar("Ordem de compra registrada!");
 			}
 			else if(ordem.getTipoDaOrdem().equals("venda")){
-				Transacao.filaDeVenda.add(ordem);
+				Transacao.adicionaVenda(ordem);
 				ordem.getReferenciaCliente().notificar("Ordem de venda registrada!");
 			}
 	}
