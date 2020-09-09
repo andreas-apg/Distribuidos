@@ -2,7 +2,7 @@ package servidor;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import common.Ordem;
 
@@ -13,6 +13,9 @@ import common.Ordem;
  * o que possui a hora mais recente.
  */ 
 public class Transacao extends Thread{
+	/* A: mudar vendedor e comprador
+	* para usuário.
+	*/
 	String vendedor; 	// usuário
 	String comprador; 	// usuário
 	String acao; 		// ie PETR4
@@ -23,10 +26,10 @@ public class Transacao extends Thread{
 	// A: usa-se assim> formataData.format(hora) 
     private Thread thread;
 	
-	public static ArrayList<Transacao> transacoes = new ArrayList<Transacao>();
+	public static Vector<Transacao> transacoes = new Vector<Transacao>();
 	// A: movi as filas de compra e venda pra essa classe
-	public static ArrayList<Ordem> filaDeCompra = new ArrayList<Ordem>();
-	public static ArrayList<Ordem> filaDeVenda = new ArrayList<Ordem>();
+	public static Vector<Ordem> filaDeCompra = new Vector<Ordem>();
+	public static Vector<Ordem> filaDeVenda = new Vector<Ordem>();
 	
 	public Transacao(String vendedor, String comprador, String acao, float preco, int quantidade) {
 		this.vendedor = vendedor;
@@ -46,7 +49,16 @@ public class Transacao extends Thread{
 		    thread.start();
     	}
     }
-    public void realizaCompra(Ordem compra, Ordem venda) {
+    
+    public synchronized static void adicionaCompra(Ordem ordem) {
+    	Transacao.filaDeCompra.add(ordem);
+    }
+    
+    public synchronized static void adicionaVenda(Ordem ordem) {
+    	Transacao.filaDeCompra.add(ordem);
+    }
+    
+    public synchronized void realizaCompra(Ordem compra, Ordem venda) {
     	Transacao transacao;
     	/* A: se a ordem de venda oferece maior quantidade
     	 * que a de compra, esgotará a de compra.
@@ -83,31 +95,40 @@ public class Transacao extends Thread{
     		filaDeVenda.remove(indiceVenda);
     	}
     }
+    /* A: método que varre as filas de compra e venda
+     * para ver se um par de papel bate. Se bater,
+     * chamará o método realizaCompra para efetuar
+     * a transacao em si.
+     */
+    private void procuraTransacao() {
+		/* A: só executa as comparações se as duas filas não
+		* estiveram vazias.
+		*/ 
+		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
+			outerLoop:
+		    for(Ordem compra : filaDeCompra) {
+		    	for(Ordem venda : filaDeVenda) {
+		    		/* A: iterando pela lista de compra e venda, pra ver
+		    		 * se um papel bate e se são de usuários diferentes
+		    		 */
+		    		if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getUsuario().equals(venda.getUsuario())) {
+		    			/* A: só será feita a compra se o preço máximo de compra
+		    			* for maior ou igual ao preço mínimo de venda.
+		    			*/
+		    			if(compra.getValor() >= venda.getValor()) {
+		    					realizaCompra(compra, venda);
+		    					break outerLoop;
+		    			}
+		    		}			    			
+		    	}
+		    }
+		}
+    }
+    
     public void run(){    
     	System.out.println("Thread de transacao inicializada.");
     	while(true) {
-    		/* A: só executa as comparações se as duas filas não
-    		* estiveram vazias.
-    		*/ 
-    		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
-    			outerLoop:
-			    for(Ordem compra : filaDeCompra) {
-			    	for(Ordem venda : filaDeVenda) {
-			    		/* A: iterando pela lista de compra e venda, pra ver
-			    		 * se um papel bate e se são de usuários diferentes
-			    		 */
-			    		if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getUsuario().equals(venda.getUsuario())) {
-			    			/* A: só será feita a compra se o preço máximo de compra
-			    			* for maior ou igual ao preço mínimo de venda.
-			    			*/
-			    			if(compra.getValor() >= venda.getValor()) {
-			    					realizaCompra(compra, venda);
-			    					break outerLoop;
-			    			}
-			    		}			    			
-			    	}
-			    }
-			}
+    		procuraTransacao();
 		}
     }	
 }
