@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 import common.Ordem;
+import interfaces.InterfaceCli;
 
 /* classe para a transação de uma ação.
  * Para saber a cotação de uma ação,
@@ -17,7 +18,9 @@ public class Transacao extends Thread{
 	* para usuário.
 	*/
 	String vendedor; 	// usuário
+	InterfaceCli vendedorRef;
 	String comprador; 	// usuário
+	InterfaceCli compradorRef;
 	String acao; 		// ie PETR4
 	float preco; 		// em reais
 	int quantidade; 	// número inteiro 
@@ -31,9 +34,11 @@ public class Transacao extends Thread{
 	public static Vector<Ordem> filaDeCompra = new Vector<Ordem>();
 	public static Vector<Ordem> filaDeVenda = new Vector<Ordem>();
 	
-	public Transacao(String vendedor, String comprador, String acao, float preco, int quantidade) {
+	public Transacao(String vendedor, InterfaceCli vendedorRef, String comprador, InterfaceCli compradorRef, String acao, float preco, int quantidade) {
 		this.vendedor = vendedor;
+		this.vendedorRef = vendedorRef;
 		this.comprador = comprador;
+		this.compradorRef = compradorRef;
 		this.acao = acao;
 		this.preco = preco;
 		this.quantidade = quantidade;
@@ -66,7 +71,7 @@ public class Transacao extends Thread{
     	int indiceCompra = filaDeCompra.indexOf(compra);
     	int indiceVenda = filaDeVenda.indexOf(venda);
     	if(venda.getQuantidade() > compra.getQuantidade()) {
-    		transacao = new Transacao(venda.getUsuario(), compra.getUsuario(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
+    		transacao = new Transacao(venda.getUsuario(), venda.getReferenciaCliente(), compra.getUsuario(), compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
     		transacoes.add(transacao);
     		venda.setQuantidade(venda.getQuantidade() - compra.getQuantidade());
     		// A: atualizando a ordem de venda na filaDeVenda
@@ -77,7 +82,7 @@ public class Transacao extends Thread{
     	 * sairão das filas.
     	 */
     	else if(venda.getQuantidade() == compra.getQuantidade()) {
-    		transacao = new Transacao(venda.getUsuario(), compra.getUsuario(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
+    		transacao = new Transacao(venda.getUsuario(), venda.getReferenciaCliente(), compra.getUsuario(), compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
     		transacoes.add(transacao);
     		filaDeVenda.remove(indiceVenda);
     		filaDeCompra.remove(indiceCompra);
@@ -86,7 +91,7 @@ public class Transacao extends Thread{
     	 * que a de compra, esgotará a de venda.
     	 */
     	else if(venda.getQuantidade() < compra.getQuantidade()) {
-    		transacao = new Transacao(venda.getUsuario(), compra.getUsuario(), compra.getCodigoDaAcao(), compra.getValor(), venda.getQuantidade());
+    		transacao = new Transacao(venda.getUsuario(), venda.getReferenciaCliente(), compra.getUsuario(), compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getValor(), venda.getQuantidade());
     		transacoes.add(transacao);
     		compra.setQuantidade(compra.getQuantidade() - venda.getQuantidade());
     		// A: atualizando a ordem de venda na filaDeCompre
@@ -105,7 +110,6 @@ public class Transacao extends Thread{
 		* estiveram vazias.
 		*/ 
 		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
-			outerLoop:
 		    for(Ordem compra : filaDeCompra) {
 		    	for(Ordem venda : filaDeVenda) {
 		    		/* A: iterando pela lista de compra e venda, pra ver
@@ -117,7 +121,7 @@ public class Transacao extends Thread{
 		    			*/
 		    			if(compra.getValor() >= venda.getValor()) {
 		    					realizaCompra(compra, venda);
-		    					break outerLoop;
+		    					return;
 		    			}
 		    		}			    			
 		    	}
