@@ -2,6 +2,8 @@ package common;
 
 import java.util.Date;
 
+import servidor.Transacao;
+
 
 /* classe para uma ordem. Um usuário
  * faz uma ordem de compra ou de venda
@@ -23,6 +25,7 @@ public class Ordem extends Base {
 	private float valor; // em reais
 	private int quantidade;
 	private Date prazo;
+	private Thread thread;
 
 	public String getTipoDaOrdem() {
 		return tipoDaOrdem;
@@ -55,5 +58,27 @@ public class Ordem extends Base {
 	public void setTipoDaOrdem(String tipoDaOrdem) {
 		this.tipoDaOrdem = tipoDaOrdem;
 	}
-
+	
+    public void start() {
+    	if(thread == null) {
+    		String nomeThread = this.getUsuario() + this.getCodigoDaAcao() + new Date();
+		    thread = new Thread(this, nomeThread);
+		    System.out.println("Iniciando thread da ordem " + this.getUsuario() + this.getCodigoDaAcao() + new Date());
+		    thread.start();
+    	}
+    }
+	
+    /* A: thread é criada, mas dorme até estourar
+     * seu prazo. Nesse momento, apenas acorda
+     * para se remover da sua respectiva fila.
+     */
+	public void run() {
+		try {
+			Thread.sleep(prazo.getTime());
+		} catch (InterruptedException e) {
+			System.out.println(e);
+		}
+		Transacao.mataOrdem(this);
+		// terminando o run, a thread é finalizada.
+	}
 }

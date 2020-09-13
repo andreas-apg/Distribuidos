@@ -52,14 +52,6 @@ public class Transacao extends Thread{
 	public Transacao(Vector<Usuario> listaDeUsuarios) {
 		Transacao.listaDeUsuarios = listaDeUsuarios;
 	}
-	
-    public void start() {
-    	if(thread == null) {
-		    thread = new Thread(this, "transaction");
-		    System.out.println("Iniciando thread de Transacao...");
-		    thread.start();
-    	}
-    }
     
     public synchronized static void adicionaCompra(Ordem ordem) {
     	Transacao.filaDeCompra.add(ordem);
@@ -278,19 +270,38 @@ public class Transacao extends Thread{
     	}
     }
     
+    public synchronized static void mataOrdem(Ordem ordem) {
+		if(ordem.getTipoDaOrdem().equals("compra")) {
+			filaDeCompra.remove(filaDeCompra.indexOf(ordem));
+		}
+		else if(ordem.getTipoDaOrdem().equals("venda")) {
+			filaDeVenda.remove(filaDeVenda.indexOf(ordem));
+		}
+    }
+    
+    public void start() {
+    	if(thread == null) {
+		    thread = new Thread(this, "transaction");
+		    System.out.println("Iniciando thread de Transacao...");
+		    thread.start();
+    	}
+    }
+    
     public void run(){    
     	System.out.println("Thread de transacao inicializada.");
     	while(true) {
     		//procuraTransacao();
     		/* A: tem que ter um jeito melhor do que isso
     		 * para remover ordens que venceram.
-    		 */
+    		 
     			for(Ordem ordem : filaDeCompra) {
     				checaPrazo(ordem);
     			}
     			for(Ordem ordem : filaDeVenda) {
     				checaPrazo(ordem);   			
     		}
+    		* Fazendo teste com cada Ordem ser sua thread.
+    		*/
 		}
     }	
 }

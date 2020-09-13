@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import interfaces.InterfaceCli;
 
-public abstract class Base implements Serializable {
+public abstract class Base extends Thread implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
