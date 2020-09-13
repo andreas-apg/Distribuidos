@@ -1,6 +1,7 @@
 package servidor;
 
 import java.util.Date;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
@@ -63,8 +64,9 @@ public class Transacao extends Thread{
     	Transacao.filaDeCompra.add(ordem);
     }
     
-    public synchronized void realizaCompra(Ordem compra, Ordem venda) {
+    public synchronized void realizaCompra(Ordem compra, Ordem venda) throws RemoteException {
     	Transacao transacao;
+    	String notificacao;
     	/* A: se a ordem de venda oferece maior quantidade
     	 * que a de compra, esgotará a de compra.
     	 */
@@ -77,7 +79,12 @@ public class Transacao extends Thread{
     		// A: atualizando a ordem de venda na filaDeVenda
     		filaDeVenda.set(indiceVenda, venda);
     		// A: removendo a ordem de compra da filaDeCompra
-    		filaDeCompra.remove(indiceCompra);    	}
+    		filaDeCompra.remove(indiceCompra);   
+    		System.out.printf("Transacao realizada: usuario %s comprou %f %s do usuario %s por %f.", venda.getUsuario(), compra.getQuantidade(), compra.getValor(), compra.getCodigoDaAcao(), venda.getUsuario());
+    		notificacao = compra.getQuantidade() + " " + compra.getCodigoDaAcao() + " por " + compra.getValor();
+    		compra.getReferenciaCliente().notificar("Compra realizada: " + notificacao);
+    		venda.getReferenciaCliente().notificar("Venda realizada: " + notificacao);
+    		}
     	/* A: se quantidade de compra e venda forem iguais, os dois
     	 * sairão das filas.
     	 */
@@ -86,6 +93,10 @@ public class Transacao extends Thread{
     		transacoes.add(transacao);
     		filaDeVenda.remove(indiceVenda);
     		filaDeCompra.remove(indiceCompra);
+    		System.out.printf("Transacao realizada: usuario %s comprou %f %s do usuario %s por %f.", venda.getUsuario(), compra.getQuantidade(), compra.getValor(), compra.getCodigoDaAcao(), venda.getUsuario());
+    		notificacao = compra.getQuantidade() + " " + compra.getCodigoDaAcao() + " por " + compra.getValor();
+    		compra.getReferenciaCliente().notificar("Compra realizada: " + notificacao);
+    		venda.getReferenciaCliente().notificar("Venda realizada: " + notificacao);
     	}
     	/* A: se a ordem de venda oferece menor quantidade
     	 * que a de compra, esgotará a de venda.
@@ -98,6 +109,10 @@ public class Transacao extends Thread{
     		filaDeCompra.set(indiceCompra, compra);
     		// A: removendo a ordem de venda da filaDeVenda
     		filaDeVenda.remove(indiceVenda);
+    		System.out.printf("Transacao realizada: usuario %s comprou %f %s do usuario %s por %f.", venda.getUsuario(), venda.getQuantidade(), compra.getValor(), compra.getCodigoDaAcao(), venda.getUsuario());
+    		notificacao = venda.getQuantidade() + " " + compra.getCodigoDaAcao() + " por " + compra.getValor();
+    		compra.getReferenciaCliente().notificar("Compra realizada: " + notificacao);
+    		venda.getReferenciaCliente().notificar("Venda realizada: " + notificacao);
     	}
     }
     /* A: método que varre as filas de compra e venda
@@ -118,9 +133,16 @@ public class Transacao extends Thread{
 		    		if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getUsuario().equals(venda.getUsuario())) {
 		    			/* A: só será feita a compra se o preço máximo de compra
 		    			* for maior ou igual ao preço mínimo de venda.
+		    			* A: atualizei para exatamente igual porque
+		    			* O pdf diz.
 		    			*/
-		    			if(compra.getValor() >= venda.getValor()) {
-		    					realizaCompra(compra, venda);
+		    			if(compra.getValor() == venda.getValor()) {
+		    					try {
+									realizaCompra(compra, venda);
+								} catch (RemoteException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 		    					return;
 		    			}
 		    		}			    			
