@@ -76,8 +76,9 @@ public class Ordem extends Base {
      * para se remover da sua respectiva fila.
      */
 	public void run() {
+		System.out.println("Prazo da acao: " + (prazo.toInstant().toEpochMilli() - 10800000) + "ms.");
 		try {
-			Thread.sleep(prazo.getTime());
+			Thread.sleep(prazo.toInstant().toEpochMilli() - 10800000);
 		} catch (InterruptedException e) {
 			System.out.println(e);
 		}
