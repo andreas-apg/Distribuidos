@@ -11,8 +11,8 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	private static final long serialVersionUID = 1L;
 
-	Transacao transacao = new Transacao();
 	Vector<Usuario> listaDeUsuarios;
+	Transacao transacao = new Transacao(listaDeUsuarios);
 
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
