@@ -5,14 +5,13 @@ public class Usuario {
 
     private String nome;
 
-    public Carteira carteira;
+    private Carteira carteira;
 
-    public Usuario() {
-        carteira = new Carteira();
+    public Carteira getCarteira() {
+		return carteira;
+	}
 
-    }
-
-    public String getNome() {
+	public String getNome() {
         return nome;
     }
 
@@ -21,7 +20,7 @@ public class Usuario {
     }
 
     public Usuario(String nome) {
-        super();
+        carteira = new Carteira();
         this.setNome(nome);
     }
         

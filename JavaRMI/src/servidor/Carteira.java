@@ -11,8 +11,7 @@ public class Carteira {
         listaDeAcoes = new HashMap<String, Integer>();    
     }
 
-    public void adicionarAcaoNaCarteira(String codigoDaAcao, Integer qtdeAAdicionar){
-        
+    public void adicionarAcaoNaCarteira(String codigoDaAcao, Integer qtdeAAdicionar) throws Exception{
         
         // Validacao dos argumentos
         if (!(codigoDaAcao.length() == 5)){

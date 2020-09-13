@@ -2,31 +2,58 @@ package servidor;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Vector;
 
 import common.*;
 import interfaces.*;
 
 public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
-	/**
-	 * 
-	 */
+	Vector<Usuario> listaDeUsuarios;
+
 	private static final long serialVersionUID = 1L;
 	Transacao transacao = new Transacao();
+
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
+		listaDeUsuarios = new Vector<Usuario>();
 		transacao.start();
 		// creates all lists and queues
 	}
 
 	@Override
-	public void registrarNovoCliente(String usuario) throws RemoteException {
-		System.out.printf("usuário %s se conectou!\n", usuario);
+	public void registrarNovoCliente(String nomeDeUsuario) throws RemoteException {
+		System.out.printf("usuário %s se conectou!\n", nomeDeUsuario);
+		Usuario novoUsuario = new Usuario(nomeDeUsuario);
+		Carteira carteira = novoUsuario.getCarteira();
+
+		// Para facilitar os teste, iniciamos os usuarios com 3 acoes
+		try {
+			carteira.adicionarAcaoNaCarteira("AZUL4", 100);
+			carteira.adicionarAcaoNaCarteira("VALE3", 100);
+			carteira.adicionarAcaoNaCarteira("PETR4", 100);
+		} catch (Exception e) {
+			System.out.println("Erro ao inicializara acoes na carteira do usuario");
+			e.printStackTrace();
+		}
+
+
+		listaDeUsuarios.add(novoUsuario);
 	}
 
 	@Override
-	public void registrarSaidaDeCliente(String usuario) throws RemoteException {
-		System.out.printf("usuário %s saiu!\n", usuario);
+	public void registrarSaidaDeCliente(String nomeDeUsuario) throws RemoteException {
+		System.out.printf("usuário %s saiu!\n", nomeDeUsuario);
+		
+		// TODO: Tratar saida do usuario (remover ordens, remover da lista de usuario...)		
+		
+		for (Usuario usuario : listaDeUsuarios) {
+			if(usuario.getNome().equals(nomeDeUsuario)){
+				listaDeUsuarios.remove(usuario);
+				break;
+			}
+		}
+
 	}
 
 	@Override
