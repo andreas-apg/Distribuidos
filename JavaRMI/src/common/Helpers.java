@@ -14,7 +14,6 @@ public class Helpers {
 		String userInput;
 		Date prazo;
         DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-        DateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
 		while(true) {
 			System.out.println("Digite o prazo de validade da ordem como 'hh:mm:ss' (Default: 00:05:00)");
@@ -28,25 +27,6 @@ public class Helpers {
 
                 prazo = timeFormat.parse(userInput);
 
-                // incrementa a hora o prazo ao timestamp atual
-                // https://mkyong.com/java/java-how-to-add-days-to-current-date/
-                Date currentDate = new Date();
-                System.out.println(dateTimeFormat.format(currentDate));
-        
-                // convert date to calendar
-                Calendar c = Calendar.getInstance();
-                c.setTime(currentDate);
-        
-                // manipulate date
-                c.add(Calendar.HOUR,prazo.getHours());
-                c.add(Calendar.MINUTE, prazo.getMinutes());
-                c.add(Calendar.SECOND, prazo.getSeconds());
-        
-                // convert calendar to date
-                prazo = c.getTime();
-        
-                System.out.println(dateTimeFormat.format(prazo));
-				
 				break;
 			} catch (ParseException e ) {			
 				System.out.println("Prazo invalido");
