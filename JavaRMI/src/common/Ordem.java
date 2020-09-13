@@ -1,5 +1,6 @@
 package common;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import servidor.Transacao;
@@ -26,6 +27,8 @@ public class Ordem extends Base {
 	private int quantidade;
 	private Date prazo;
 	private Thread thread;
+	// A: usa-se assim> formataData.format(hora) 
+	SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss");
 
 	public String getTipoDaOrdem() {
 		return tipoDaOrdem;
@@ -63,7 +66,7 @@ public class Ordem extends Base {
     	if(thread == null) {
     		String nomeThread = this.getUsuario() + this.getCodigoDaAcao() + new Date();
 		    thread = new Thread(this, nomeThread);
-		    System.out.println("Iniciando thread da ordem " + this.getUsuario() + this.getCodigoDaAcao() + new Date());
+		    System.out.println("Iniciando thread de ordem " + this.getUsuario() + "_" + this.getTipoDaOrdem() +"_" +  this.getCodigoDaAcao() + "_" + formataData.format(new Date()));
 		    thread.start();
     	}
     }
@@ -79,6 +82,7 @@ public class Ordem extends Base {
 			System.out.println(e);
 		}
 		Transacao.mataOrdem(this);
+	    System.out.println("Finalizando thread de ordem " + thread.getName());
 		// terminando o run, a thread é finalizada.
 	}
 }

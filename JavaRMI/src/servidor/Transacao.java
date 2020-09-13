@@ -1,6 +1,8 @@
 package servidor;
 
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map.Entry;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
@@ -33,8 +35,8 @@ public class Transacao extends Thread{
 	
 	public static Vector<Transacao> transacoes = new Vector<Transacao>();
 	// A: movi as filas de compra e venda pra essa classe
-	public static Vector<Ordem> filaDeCompra = new Vector<Ordem>();
-	public static Vector<Ordem> filaDeVenda = new Vector<Ordem>();
+	public static Hashtable<Ordem, String> filaDeCompra = new Hashtable<Ordem, String>();
+	public static Hashtable<Ordem, String> filaDeVenda = new Hashtable<Ordem, String>();
 	
 	public Transacao(String vendedor, InterfaceCli vendedorRef, String comprador, InterfaceCli compradorRef, String acao, float preco, int quantidade) {
 		this.vendedor = vendedor;
@@ -54,12 +56,12 @@ public class Transacao extends Thread{
 	}
     
     public synchronized static void adicionaCompra(Ordem ordem) {
-    	Transacao.filaDeCompra.add(ordem);
+    	Transacao.filaDeCompra.put(ordem, ordem.getCodigoDaAcao());
     	procuraVenda(ordem);
     }
     
     public synchronized static void adicionaVenda(Ordem ordem) {
-    	Transacao.filaDeCompra.add(ordem);
+    	Transacao.filaDeCompra.put(ordem, ordem.getCodigoDaAcao());
     	procuraCompra(ordem);
     }
     
@@ -67,18 +69,16 @@ public class Transacao extends Thread{
     	Transacao transacao;
     	/* A: se a ordem de venda oferece maior quantidade
     	 * que a de compra, esgotará a de compra.
-    	 */
-    	int indiceCompra = filaDeCompra.indexOf(compra);
-    	int indiceVenda = filaDeVenda.indexOf(venda);
+    	 */;
     	try {
 	    	if(venda.getQuantidade() > compra.getQuantidade()) {
 	    		transacao = new Transacao(venda.getUsuario(), venda.getReferenciaCliente(), compra.getUsuario(), compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
 	    		transacoes.add(transacao);
+	    		// A: atualizando a quantidade na ordem de venda
 	    		venda.setQuantidade(venda.getQuantidade() - compra.getQuantidade());
-	    		// A: atualizando a ordem de venda na filaDeVenda
-	    		filaDeVenda.set(indiceVenda, venda);
+	    		
 	    		// A: removendo a ordem de compra da filaDeCompra
-	    		filaDeCompra.remove(indiceCompra);
+	    		filaDeCompra.remove(compra);
 	    		
 	    		// A: atualizando carteira do comprador
 	    		adicionaNaCarteira(compra.getUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade());
@@ -95,8 +95,8 @@ public class Transacao extends Thread{
 	    		transacao = new Transacao(venda.getUsuario(), venda.getReferenciaCliente(), compra.getUsuario(), compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
 	    		transacoes.add(transacao);
 	    		// A: removendo as ordens das filas
-	    		filaDeVenda.remove(indiceVenda);
-	    		filaDeCompra.remove(indiceCompra);
+	    		filaDeVenda.remove(venda);
+	    		filaDeCompra.remove(compra);
 
 	    		// A: atualizando carteira do comprador
 	    		adicionaNaCarteira(compra.getUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade());
@@ -111,11 +111,11 @@ public class Transacao extends Thread{
 	    	else if(venda.getQuantidade() < compra.getQuantidade()) {
 	    		transacao = new Transacao(venda.getUsuario(), venda.getReferenciaCliente(), compra.getUsuario(), compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getValor(), venda.getQuantidade());
 	    		transacoes.add(transacao);
+	    		// A: atualizando a quantidade da fila de compra
 	    		compra.setQuantidade(compra.getQuantidade() - venda.getQuantidade());
-	    		// A: atualizando a ordem de venda na filaDeCompre
-	    		filaDeCompra.set(indiceCompra, compra);
+
 	    		// A: removendo a ordem de venda da filaDeVenda
-	    		filaDeVenda.remove(indiceVenda);
+	    		filaDeVenda.remove(venda);
 	    		
 	    		// A: atualizando carteira do comprador
 	    		adicionaNaCarteira(compra.getUsuario(), compra.getCodigoDaAcao(), venda.getQuantidade());
@@ -128,40 +128,6 @@ public class Transacao extends Thread{
 			System.out.println("RemoteException: " + e.getMessage());
 		}
     }
-    /* A: método que varre as filas de compra e venda
-     * para ver se um par de papel bate. Se bater,
-     * chamará o método realizaCompra para efetuar
-     * a transacao em si.
-     */
-    private static void procuraTransacao() {
-		/* A: só executa as comparações se as duas filas não
-		* estiveram vazias.
-		*/ 
-		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
-		    for(Ordem compra : filaDeCompra) {
-		    	for(Ordem venda : filaDeVenda) {
-		    		/* A: iterando pela lista de compra e venda, pra ver
-		    		 * se um papel bate e se são de usuários diferentes
-		    		 */
-		    		if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getUsuario().equals(venda.getUsuario())) {
-		    			/* A: só será feita a compra se o preço máximo de compra
-		    			* for maior ou igual ao preço mínimo de venda.
-		    			* A: atualizei para exatamente igual porque
-		    			* o pdf diz.
-		    			*/
-		    			if(compra.getValor() == venda.getValor()) {
-		    					try {
-									realizaCompra(compra, venda);
-								} catch (RemoteException e) {
-									System.out.println("RemoteException: " + e.getMessage());
-								}
-		    					return;
-		    			}
-		    		}			    			
-		    	}
-		    }
-		}
-    }
     
     /* A: varre a fila de venda pra ver se tem alguma
      * com mesmo código de ação da compra nova.
@@ -170,20 +136,18 @@ public class Transacao extends Thread{
 		/* A: só executa as comparações se as duas filas não
 		* estiveram vazias.
 		*/ 
-		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
-	    	for(Ordem venda : filaDeVenda) {
+		if(filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
+	    	for(Entry<Ordem, String> venda: filaDeVenda.entrySet()) {
 	    		/* A: iterando pela lista de venda, pra ver
 	    		 * se um papel bate e se são de usuários diferentes
 	    		 */
-	    		if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getUsuario().equals(venda.getUsuario())) {
-	    			/* A: só será feita a compra se o preço máximo de compra
-	    			* for maior ou igual ao preço mínimo de venda.
-	    			* A: atualizei para exatamente igual porque
-	    			* o pdf diz.
+	    		if(compra.getCodigoDaAcao().equals(venda.getValue()) && !compra.getUsuario().equals(venda.getKey().getUsuario())) {
+	    			/* A: só será feita a compra se o preço for exatamente
+	    			* igual, como o pdf diz.
 	    			*/
-	    			if(compra.getValor() == venda.getValor()) {
+	    			if(compra.getValor() == venda.getKey().getValor()) {
 	    					try {
-								realizaCompra(compra, venda);
+								realizaCompra(compra, venda.getKey());
 							} catch (RemoteException e) {
 								System.out.println("RemoteException: " + e.getMessage());
 							}
@@ -201,26 +165,24 @@ public class Transacao extends Thread{
 		/* A: só executa as comparações se as duas filas não
 		* estiveram vazias.
 		*/ 
-		if(!filaDeCompra.isEmpty() && !filaDeVenda.isEmpty()) {
-	    	for(Ordem compra : filaDeCompra) {
+		if(filaDeCompra.containsValue(venda.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
+	    	for(Entry<Ordem, String> compra: filaDeCompra.entrySet()) {
 	    		/* A: iterando pela lista de venda, pra ver
 	    		 * se um papel bate e se são de usuários diferentes
 	    		 */
-	    		if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getUsuario().equals(venda.getUsuario())) {
-	    			/* A: só será feita a compra se o preço máximo de compra
-	    			* for maior ou igual ao preço mínimo de venda.
-	    			* A: atualizei para exatamente igual porque
-	    			* o pdf diz.
+	    		if(venda.getCodigoDaAcao().equals(compra.getValue()) && !venda.getUsuario().equals(compra.getKey().getUsuario())) {
+	    			/* A: só será feita a compra se o preço for exatamente
+	    			* igual, como o pdf diz.
 	    			*/
-	    			if(compra.getValor() == venda.getValor()) {
+	    			if(venda.getValor() == compra.getKey().getValor()) {
 	    					try {
-								realizaCompra(compra, venda);
+								realizaCompra(venda, compra.getKey());
 							} catch (RemoteException e) {
 								System.out.println("RemoteException: " + e.getMessage());
 							}
 	    					return;
 	    			}
-	    		}			    			
+	    		}				    			
 	    	}
 	    }
     }
@@ -251,31 +213,12 @@ public class Transacao extends Thread{
 		}
     }
     
-    private synchronized static void checaPrazo(Ordem ordem) {
-    	/* A: compareTo retorna 0 se data for igual,
-    	 * positivo se maior e negativo, se menor.
-    	 * para checar se a ordem venceu, basta
-    	 * ver se o valor de retorno é <= 0.
-    	 */ 
-    	if(ordem.getPrazo().compareTo(new Date()) <= 0) {
-    		/* A: ordem é removida da fila apropriada de 
-    		 * acordo com seu tipo.
-    		 */
-    		if(ordem.getTipoDaOrdem().equals("compra")) {
-				filaDeCompra.remove(filaDeCompra.indexOf(ordem));
-    		}
-    		else if(ordem.getTipoDaOrdem().equals("venda")) {
-    			filaDeVenda.remove(filaDeVenda.indexOf(ordem));
-    		}
-    	}
-    }
-    
     public synchronized static void mataOrdem(Ordem ordem) {
 		if(ordem.getTipoDaOrdem().equals("compra")) {
-			filaDeCompra.remove(filaDeCompra.indexOf(ordem));
+			filaDeCompra.remove(ordem);
 		}
 		else if(ordem.getTipoDaOrdem().equals("venda")) {
-			filaDeVenda.remove(filaDeVenda.indexOf(ordem));
+			filaDeVenda.remove(ordem);
 		}
     }
     
