@@ -2,9 +2,9 @@ package servidor;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Vector;
 
 import common.*;
 import interfaces.*;
@@ -13,16 +13,13 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	private static final long serialVersionUID = 1L;
 
-	// Todo: remover lista de Usuarios e deixar so o mapaDeusuario
-	Vector<Usuario> listaDeUsuarios;
 	private Map<InterfaceCli, Usuario> mapaDeUsuarios;
-	Transacao transacao = new Transacao(listaDeUsuarios);
+	Transacao transacao = new Transacao(mapaDeUsuarios);
 	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
 	private GerenciadorDeInteresses gerenciadorDeInteresses;
 
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
-		listaDeUsuarios = new Vector<Usuario>();
 		mapaDeUsuarios = new Hashtable<InterfaceCli, Usuario>();
 		gerenciadorDeCotacoes = new GerenciadorDeCotacoes();
 		gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
@@ -40,7 +37,6 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 		System.out.printf("usuário %s se conectou!\n", nomeDeUsuario);
 		Usuario novoUsuario = new Usuario(nomeDeUsuario, referenciaCliente);
 
-		listaDeUsuarios.add(novoUsuario);
 		mapaDeUsuarios.put(referenciaCliente, novoUsuario);
 	}
 
@@ -57,16 +53,15 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	@Override
 	public void registrarOrdem(Ordem ordem) throws RemoteException {
 		ordem.getReferenciaCliente().notificar("Servidor recebeu a ordem.");
-		/* A: ordem.tipoDaOrdem determinará para qual fila
-		 * a ordem será adicionada. O getter getTipoDaOrdem()
-		 * é utilizado.
+		/*
+		 * A: ordem.tipoDaOrdem determinará para qual fila a ordem será adicionada. O
+		 * getter getTipoDaOrdem() é utilizado.
 		 */
-		if(ordem.getTipoDaOrdem().equals("compra")) {
+		if (ordem.getTipoDaOrdem().equals("compra")) {
 			Transacao.adicionaCompra(ordem);
 			ordem.getReferenciaCliente().notificar("Ordem de compra registrada!");
 			ordem.start();
-		}
-		else if(ordem.getTipoDaOrdem().equals("venda")){
+		} else if (ordem.getTipoDaOrdem().equals("venda")) {
 			Transacao.adicionaVenda(ordem);
 			ordem.getReferenciaCliente().notificar("Ordem de venda registrada!");
 			ordem.start();
@@ -112,13 +107,15 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	public void imprimirUsuarios() {
-		System.out.println("Imprimindo lista de usuarios...");
+		System.out.println("Servidor: Imprimindo lista de usuarios...");
 		
-		if (listaDeUsuarios.size() == 0) {
-			System.out.println("Lista de usuarios vazia");
+		if (mapaDeUsuarios.size() == 0) {
+			System.out.println("Servidor: Lista de usuarios vazia");
 			return;
 		}
 		else {
+			Collection<Usuario> listaDeUsuarios = mapaDeUsuarios.values();
+
 			StringBuilder nomes = new StringBuilder();
 			String separador = "";
 			for (Usuario usuario : listaDeUsuarios) {

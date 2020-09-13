@@ -2,10 +2,11 @@ package servidor;
 
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Vector;
 import java.util.Map.Entry;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
-import java.util.Vector;
 
 import common.Ordem;
 import interfaces.InterfaceCli;
@@ -27,7 +28,7 @@ public class Transacao extends Thread{
 	String acao; 		// ie PETR4
 	float preco; 		// em reais
 	int quantidade; 	// número inteiro 
-	static Vector<Usuario> listaDeUsuarios;
+	static Map<InterfaceCli, Usuario> mapaDeUsuarios;
 	Date hora;
 	SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	// A: usa-se assim> formataData.format(hora) 
@@ -51,8 +52,8 @@ public class Transacao extends Thread{
 	
 	public Transacao() {};
 	
-	public Transacao(Vector<Usuario> listaDeUsuarios) {
-		Transacao.listaDeUsuarios = listaDeUsuarios;
+	public Transacao(Map<InterfaceCli, Usuario> mapaDeUsuarios) {
+		Transacao.mapaDeUsuarios = mapaDeUsuarios;
 	}
     
     public synchronized static void adicionaCompra(Ordem ordem) {
@@ -81,9 +82,9 @@ public class Transacao extends Thread{
 	    		filaDeCompra.remove(compra);
 	    		
 	    		// A: atualizando carteira do comprador
-	    		adicionaNaCarteira(compra.getUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade());
+	    		adicionaNaCarteira(compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade());
 	    		// A: atualizando carteira do vendedor
-	    		tiraDaCarteira(venda.getUsuario(), venda.getCodigoDaAcao(), compra.getQuantidade());
+	    		tiraDaCarteira(venda.getReferenciaCliente(), venda.getCodigoDaAcao(), compra.getQuantidade());
 	    		
 	    		// A: notificações
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade(), compra.getValor());
@@ -99,9 +100,9 @@ public class Transacao extends Thread{
 	    		filaDeCompra.remove(compra);
 
 	    		// A: atualizando carteira do comprador
-	    		adicionaNaCarteira(compra.getUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade());
+	    		adicionaNaCarteira(compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade());
 	    		// A: atualizando carteira do vendedor
-	    		tiraDaCarteira(venda.getUsuario(), venda.getCodigoDaAcao(), compra.getQuantidade());
+	    		tiraDaCarteira(venda.getReferenciaCliente(), venda.getCodigoDaAcao(), compra.getQuantidade());
 	    		
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade(), compra.getValor());
 	    	}
@@ -118,9 +119,9 @@ public class Transacao extends Thread{
 	    		filaDeVenda.remove(venda);
 	    		
 	    		// A: atualizando carteira do comprador
-	    		adicionaNaCarteira(compra.getUsuario(), compra.getCodigoDaAcao(), venda.getQuantidade());
+	    		adicionaNaCarteira(compra.getReferenciaCliente(), compra.getCodigoDaAcao(), venda.getQuantidade());
 	    		// A: atualizando carteira do vendedor
-	    		tiraDaCarteira(venda.getUsuario(), venda.getCodigoDaAcao(), venda.getQuantidade());
+	    		tiraDaCarteira(venda.getReferenciaCliente(), venda.getCodigoDaAcao(), venda.getQuantidade());
 	    		
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), venda.getQuantidade(), compra.getValor());
 	    	}
@@ -195,22 +196,14 @@ public class Transacao extends Thread{
 	}
 
 
-    private static void adicionaNaCarteira(String nomeUsuario, String codigoDaAcao, int quantidade) throws Exception {
-		for (Usuario usuario : listaDeUsuarios) {
-			if(usuario.getNome().equals(nomeUsuario)){
-				usuario.getCarteira().adicionarAcaoNaCarteira(codigoDaAcao, quantidade);
-				break;
-			}
-		}
+    private static void adicionaNaCarteira(InterfaceCli referenciaCliente, String codigoDaAcao, int quantidade) throws Exception {
+		Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
+		usuario.getCarteira().adicionarAcaoNaCarteira(codigoDaAcao, quantidade);
     }
-    
-    private static void tiraDaCarteira(String nomeUsuario, String codigoDaAcao, int quantidade) throws Exception {
-		for (Usuario usuario : listaDeUsuarios) {
-			if(usuario.getNome().equals(nomeUsuario)){
-				usuario.getCarteira().removerAcaoDaCarteira(codigoDaAcao, quantidade);
-				break;
-			}
-		}
+
+	private static void tiraDaCarteira(InterfaceCli referenciaCliente, String codigoDaAcao, int quantidade) throws Exception {
+		Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
+		usuario.getCarteira().removerAcaoDaCarteira(codigoDaAcao, quantidade);
     }
     
     public synchronized static void mataOrdem(Ordem ordem) {
