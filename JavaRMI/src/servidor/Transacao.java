@@ -259,11 +259,38 @@ public class Transacao extends Thread{
 		}
     }
     
+    private synchronized static void checaPrazo(Ordem ordem) {
+    	/* A: compareTo retorna 0 se data for igual,
+    	 * positivo se maior e negativo, se menor.
+    	 * para checar se a ordem venceu, basta
+    	 * ver se o valor de retorno é <= 0.
+    	 */ 
+    	if(ordem.getPrazo().compareTo(new Date()) <= 0) {
+    		/* A: ordem é removida da fila apropriada de 
+    		 * acordo com seu tipo.
+    		 */
+    		if(ordem.getTipoDaOrdem().equals("compra")) {
+				filaDeCompra.remove(filaDeCompra.indexOf(ordem));
+    		}
+    		else if(ordem.getTipoDaOrdem().equals("venda")) {
+    			filaDeVenda.remove(filaDeVenda.indexOf(ordem));
+    		}
+    	}
+    }
+    
     public void run(){    
     	System.out.println("Thread de transacao inicializada.");
     	while(true) {
     		//procuraTransacao();
-    		
+    		/* A: tem que ter um jeito melhor do que isso
+    		 * para remover ordens que venceram.
+    		 */
+    			for(Ordem ordem : filaDeCompra) {
+    				checaPrazo(ordem);
+    			}
+    			for(Ordem ordem : filaDeVenda) {
+    				checaPrazo(ordem);   			
+    		}
 		}
     }	
 }

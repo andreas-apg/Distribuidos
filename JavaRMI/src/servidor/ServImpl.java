@@ -11,14 +11,22 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	private static final long serialVersionUID = 1L;
 
+
 	Vector<Usuario> listaDeUsuarios;
 	Transacao transacao = new Transacao(listaDeUsuarios);
+	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
 
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
 		listaDeUsuarios = new Vector<Usuario>();
+		gerenciadorDeCotacoes = new GerenciadorDeCotacoes();
+
 		transacao.start();
 		// creates all lists and queues
+	}
+
+	public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {
+		return gerenciadorDeCotacoes;
 	}
 
 	@Override
@@ -107,9 +115,25 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	}
 
-	public void atualizarPrecoDaAcao(String codigoDaAcao, Float valor) throws Exception {
-		// TODO Auto-generated method stub
-		throw new Exception("Not implemented yet");
+	public void imprimirUsuarios() {
+		System.out.println("Imprimindo lista de usuarios...");
+		
+		if (listaDeUsuarios.size() == 0) {
+			System.out.println("Lista de usuarios vazia");
+			return;
+		}
+		else {
+			StringBuilder nomes = new StringBuilder();
+			String separador = "";
+			for (Usuario usuario : listaDeUsuarios) {
+				nomes.append(separador);
+  				separador = ", ";
+				nomes.append(usuario.getNome());
+			}
+			
+			System.out.println(nomes);
+		}
+		
 	}
 
 }

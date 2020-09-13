@@ -28,6 +28,8 @@ public class Helpers {
 
                 prazo = timeFormat.parse(userInput);
 
+                // incrementa a hora o prazo ao timestamp atual
+                // https://mkyong.com/java/java-how-to-add-days-to-current-date/
                 Date currentDate = new Date();
                 System.out.println(dateTimeFormat.format(currentDate));
         
@@ -103,7 +105,7 @@ public class Helpers {
 		
 		while (true) {
 			System.out.println("Digite o código da acao (Ex: azul4)");
-			userInput = keyboard.nextLine().toLowerCase();		
+			userInput = keyboard.nextLine().toUpperCase();		
 			
 			if (userInput.length() == 5){			
 				break;
