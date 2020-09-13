@@ -105,7 +105,7 @@ public class Helpers {
 		
 		while (true) {
 			System.out.println("Digite o código da acao (Ex: azul4)");
-			userInput = keyboard.nextLine().toLowerCase();		
+			userInput = keyboard.nextLine().toUpperCase();		
 			
 			if (userInput.length() == 5){			
 				break;

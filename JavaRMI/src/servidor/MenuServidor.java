@@ -9,10 +9,12 @@ public class MenuServidor {
     private ServImpl servidor;
     private static Scanner keyboard;
     private StringBuilder menuString;
+    private GerenciadorDeCotacoes cotacoes;
 
     public MenuServidor(ServImpl servidor) {
 
         this.servidor = servidor;
+        this.cotacoes = servidor.getGerenciadorDeCotacoes();
         buildMenuString();
         keyboard = new Scanner(System.in);
                 
@@ -23,8 +25,8 @@ public class MenuServidor {
 
         menuString.append("Menu Servidor\n");
         menuString.append("1) Imprimir lista de usuarios;\n");
-        menuString.append("2) Imprimir o preco das acoes;\n");
-        menuString.append("3) Atualizar o preco de uma acao;\n");
+        menuString.append("2) Atualizar o preco de uma acao;\n");
+        menuString.append("3) Imprimir o preco das acoes;\n");
         menuString.append("0) Sair;");
     }
 
@@ -32,8 +34,11 @@ public class MenuServidor {
 
         while(true){                    
 
+            System.out.println();
             System.out.println("Digite o numero da opcao desejada: ");
             System.out.println(menuString);
+            System.out.println();
+
 
             System.out.print("Servidor: ");
             String option = keyboard.nextLine();
@@ -50,17 +55,18 @@ public class MenuServidor {
                     servidor.imprimirUsuarios();
                     break;
                 
-                // 2) Imprimir o preco das acoes;
+                // 2) Atualizar o preco de uma acao;
                 case "2":
-                    // TODO 
-                    throw new Exception("Not implemented yet");
-                    //break;
-                
-                // 3) Atualizar minha Lista de Interesse/Cotacoes;
-                case "3":
                     String codigoDaAcao = Helpers.obterCodigoDaAcao(keyboard);
                     Float valor = Helpers.obterValor(keyboard);
-                    servidor.atualizarPrecoDaAcao(codigoDaAcao, valor);
+                    Cotacao novaCotacao = new Cotacao(codigoDaAcao, valor);
+                    cotacoes.atualizarCotacao(novaCotacao);
+                    cotacoes.imprimirCotacoes();
+                    break;
+                
+                // 3) Imprimir o preco das acoes;
+                case "3":
+                    cotacoes.imprimirCotacoes();
                     break;
                 
                 // 4) Visualizar minha carteira de acoes;   
