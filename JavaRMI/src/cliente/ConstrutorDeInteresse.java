@@ -1,24 +1,26 @@
 package cliente;
 
+import java.util.Scanner;
+
+import common.Helpers;
 import common.Interesse;
 
-public class ConstrutorDeInteresse {
+public class ConstrutorDeInteresse extends ConstrutorDeMsg{
 
 	Interesse interesse;
-	ConstrutorDeMsg construtorDeMsg;
 
-	public ConstrutorDeInteresse(ConstrutorDeMsg construtorDeMsg) {
-		
+	public ConstrutorDeInteresse(String nomeDeUsuario, CliImpl cliente, Scanner keyboard) {
+		super(nomeDeUsuario, cliente, keyboard);
 		interesse = new Interesse();
-		this.construtorDeMsg = construtorDeMsg;
+		
 	}
 
 	public Interesse obterInteresseDoUsuario() {
-		interesse.setUsuario(construtorDeMsg.getUsuario());
-		interesse.setReferenciaCliente(construtorDeMsg.getCliente());
 
-		interesse.setTipoDaAtualizacao(construtorDeMsg.obterTipoDaAtualizacao());
-		interesse.setCodigoDaAcao(construtorDeMsg.obterCodigoDaAcao());
+		interesse.setReferenciaCliente(cliente);
+		interesse.setUsuario(nomeDeUsuario);
+		interesse.setTipoDaAtualizacao(Helpers.obterTipoDaAtualizacao(keyboard));
+		interesse.setCodigoDaAcao(Helpers.obterCodigoDaAcao(keyboard));
 
 		return interesse;
 	}

@@ -9,10 +9,10 @@ import interfaces.*;
 
 public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
-	Vector<Usuario> listaDeUsuarios;
-
 	private static final long serialVersionUID = 1L;
+
 	Transacao transacao = new Transacao();
+	Vector<Usuario> listaDeUsuarios;
 
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
@@ -105,6 +105,11 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	public void atualizarListaDeLimite(Limite limite) throws RemoteException {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void atualizarPrecoDaAcao(String codigoDaAcao, Float valor) throws Exception {
+		// TODO Auto-generated method stub
+		throw new Exception("Not implemented yet");
 	}
 
 }

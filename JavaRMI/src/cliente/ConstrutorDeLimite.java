@@ -1,26 +1,28 @@
 package cliente;
 
+import java.util.Scanner;
+
+import common.Helpers;
 import common.Limite;
 
-public class ConstrutorDeLimite {
+public class ConstrutorDeLimite extends ConstrutorDeMsg{
 
 	Limite limite;
-	ConstrutorDeMsg construtorDeMsg;
 
-	public ConstrutorDeLimite(ConstrutorDeMsg construtorDeMsg) {
-		
+
+	public ConstrutorDeLimite(String nomeDeUsuario, CliImpl cliente, Scanner keyboard) {
+		super(nomeDeUsuario, cliente, keyboard);
 		limite = new Limite();
-		this.construtorDeMsg = construtorDeMsg;
 	}
 
 	public Limite obterLimiteDoUsuario() {
-        
-		limite.setUsuario(construtorDeMsg.getUsuario());
-		limite.setReferenciaCliente(construtorDeMsg.getCliente());
-        limite.setTipoDaAtualizacao(construtorDeMsg.obterTipoDaAtualizacao());
-		limite.setTipoDoLimite(construtorDeMsg.obterTipoDoLimite());
-        limite.setCodigoDaAcao(construtorDeMsg.obterCodigoDaAcao());
-        limite.setValor(construtorDeMsg.obterValor());
+		
+		limite.setReferenciaCliente(cliente);
+		limite.setUsuario(nomeDeUsuario);
+        limite.setTipoDaAtualizacao(Helpers.obterTipoDaAtualizacao(keyboard));
+		limite.setTipoDoLimite(Helpers.obterTipoDoLimite(keyboard));
+        limite.setCodigoDaAcao(Helpers.obterCodigoDaAcao(keyboard));
+        limite.setValor(Helpers.obterValor(keyboard));
 
 		return limite;
 	}

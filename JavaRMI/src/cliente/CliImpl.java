@@ -95,4 +95,8 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 	public String getNomeDeUsuario() {
 		return nomeDeUsuario;
 	}
+
+	public void sair() throws RemoteException {
+        referenciaServidor.registrarSaidaDeCliente(nomeDeUsuario);
+	}
 }

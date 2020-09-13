@@ -9,7 +9,7 @@ public abstract class Base implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private InterfaceCli referenciaCliente;
-    private String usuario; // quem fez a ordem
+    private String nomeDeUsuario; // quem fez a ordem
     private String codigoDaAcao; // nome da ação ex PETR4
 
     public InterfaceCli getReferenciaCliente() {
@@ -25,11 +25,11 @@ public abstract class Base implements Serializable {
     }
 
     public String getUsuario() {
-        return usuario;
+        return nomeDeUsuario;
     }
 
     public void setUsuario(String usuario) {
-        this.usuario = usuario;
+        this.nomeDeUsuario = usuario;
     }
 
     public void setReferenciaCliente(InterfaceCli referenciaCliente) {

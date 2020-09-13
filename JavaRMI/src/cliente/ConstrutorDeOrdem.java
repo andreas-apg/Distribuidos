@@ -1,30 +1,29 @@
 package cliente;
 
+import java.util.Scanner;
+
 import common.*;
 
-public class ConstrutorDeOrdem {
+public class ConstrutorDeOrdem extends ConstrutorDeMsg{
 
 	Ordem ordem;
-	ConstrutorDeMsg construtorDeMsg;
 
-	public ConstrutorDeOrdem(ConstrutorDeMsg construtorDeMsg) {
-
+	public ConstrutorDeOrdem(String nomeDeUsuario, CliImpl cliente, Scanner keyboard) {
+		super(nomeDeUsuario, cliente, keyboard);
 
 		ordem = new Ordem();
-		this.construtorDeMsg = construtorDeMsg;
 		
 	}
 
 	public Ordem obterOrdemDoUsuario() {
 
-		ordem.setUsuario(construtorDeMsg.getUsuario());
-		ordem.setReferenciaCliente(construtorDeMsg.getCliente());
-
-		ordem.setTipoDaOrdem(construtorDeMsg.obterTipoDaOrdem());
-		ordem.setCodigoDaAcao(construtorDeMsg.obterCodigoDaAcao());
-		ordem.setValor(construtorDeMsg.obterValor());
-		ordem.setQuantidade(construtorDeMsg.obterQuantidade());
-		ordem.setPrazo(construtorDeMsg.obterPrazo());
+		ordem.setReferenciaCliente(cliente);
+		ordem.setUsuario(nomeDeUsuario);
+		ordem.setTipoDaOrdem(Helpers.obterTipoDaOrdem(keyboard));
+		ordem.setCodigoDaAcao(Helpers.obterCodigoDaAcao(keyboard));
+		ordem.setValor(Helpers.obterValor(keyboard));
+		ordem.setQuantidade(Helpers.obterQuantidade(keyboard));
+		ordem.setPrazo(Helpers.obterPrazo(keyboard));
 
 		return ordem;
 

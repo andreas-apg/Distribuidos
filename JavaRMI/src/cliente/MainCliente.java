@@ -5,7 +5,7 @@ import java.rmi.registry.*;
 
 public class MainCliente {
     
-    private static Menu menu;
+    private static MenuCliente menu;
     private static InterfaceServ referenciaServidor;
     // private static InterfaceCli cliente;
     private static CliImpl cliente;
@@ -18,7 +18,7 @@ public class MainCliente {
 
         cliente = new CliImpl(referenciaServidor);
 
-        menu = new Menu(cliente);
+        menu = new MenuCliente(cliente);
         menu.start();
 
 
