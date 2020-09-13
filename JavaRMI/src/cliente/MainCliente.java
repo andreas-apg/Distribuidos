@@ -3,7 +3,7 @@ package cliente;
 import interfaces.*;
 import java.rmi.registry.*;
 
-public class Main {
+public class MainCliente {
     
     private static Menu menu;
     private static InterfaceServ referenciaServidor;

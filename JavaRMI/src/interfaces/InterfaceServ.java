@@ -11,6 +11,7 @@ public interface InterfaceServ extends Remote {
   
     // Metodo chamado no servidor por cada cliente quando ele "entra" no sistema
     public void registrarNovoCliente(String usuario) throws RemoteException;
+    public void registrarSaidaDeCliente(String usuario) throws RemoteException;
 
     // Lista de acoes em que o cliente tem interesse em acompanhar   
     public void atualizarListaDeInteresse(Interesse interesse)

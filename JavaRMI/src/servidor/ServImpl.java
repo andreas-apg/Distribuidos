@@ -20,8 +20,13 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void registrarNovoCliente(String usuario) {
+	public void registrarNovoCliente(String usuario) throws RemoteException {
 		System.out.printf("usuário %s se conectou!\n", usuario);
+	}
+
+	@Override
+	public void registrarSaidaDeCliente(String usuario) throws RemoteException {
+		System.out.printf("usuário %s saiu!\n", usuario);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package cliente;
 import interfaces.*;
 import common.*;
 
+import java.lang.management.ManagementFactory;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -12,14 +13,14 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 
     private static final long serialVersionUID = 1L;
     
+    private String nomeDeUsuario;
     InterfaceServ referenciaServidor;
 
     protected CliImpl(InterfaceServ referenciaServidor) throws RemoteException {
         this.referenciaServidor = referenciaServidor;
-        referenciaServidor.registrarNovoCliente("giovane");
+        nomeDeUsuario = ManagementFactory.getRuntimeMXBean().getName();
+        referenciaServidor.registrarNovoCliente(nomeDeUsuario);
     }
-
-
     
     @Override
     public void notificar(String texto) throws RemoteException {
@@ -90,4 +91,8 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
             e.printStackTrace();
         }
     }
+
+	public String getNomeDeUsuario() {
+		return nomeDeUsuario;
+	}
 }
