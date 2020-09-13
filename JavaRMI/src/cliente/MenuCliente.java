@@ -31,10 +31,11 @@ public class MenuCliente {
 
         System.out.println("Welcomed " + nomeDeUsuario + "!");
         
-        System.out.println();
+        
 
         while(true){                    
-
+            
+            System.out.println();
             System.out.println("Digite o numero da opcao desejada: ");
             System.out.println(menuString);
 
