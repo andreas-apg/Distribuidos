@@ -19,7 +19,7 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
     protected CliImpl(InterfaceServ referenciaServidor) throws RemoteException {
         this.referenciaServidor = referenciaServidor;
         nomeDeUsuario = ManagementFactory.getRuntimeMXBean().getName();
-        referenciaServidor.registrarNovoCliente(nomeDeUsuario);
+        referenciaServidor.registrarNovoCliente(nomeDeUsuario, this);
     }
     
     @Override
@@ -97,6 +97,6 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
 	}
 
 	public void sair() throws RemoteException {
-        referenciaServidor.registrarSaidaDeCliente(nomeDeUsuario);
+        referenciaServidor.registrarSaidaDeCliente(this);
 	}
 }

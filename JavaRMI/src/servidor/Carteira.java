@@ -5,10 +5,13 @@ import java.util.Map;
 
 public class Carteira {
     
-    Map<String, Integer> listaDeAcoes ;
+    private Map<String, Integer> listaDeAcoes ;
    
     public Carteira() {
         listaDeAcoes = new HashMap<String, Integer>();    
+		listaDeAcoes.put("AZUL4", 100);
+		listaDeAcoes.put("VALE3", 100);
+		listaDeAcoes.put("PETR4", 100);
     }
 
     public void adicionarAcaoNaCarteira(String codigoDaAcao, Integer qtdeAAdicionar) throws Exception{

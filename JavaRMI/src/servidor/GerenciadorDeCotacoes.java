@@ -1,18 +1,24 @@
 package servidor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-
+// Classe do Servidor para ser utilizada em testes
+// Permite simular o mercado atualizando manualmente o preco das acoes,
+// e tambem imprimir o preco atual
 public class GerenciadorDeCotacoes {
-    
-    List<Cotacao> listaDeCotacoes;
-    
+
+    private Map<String, Cotacao> mapaDeCotacoes;
+        
     public GerenciadorDeCotacoes() {
-        listaDeCotacoes = new ArrayList<Cotacao>();
-        listaDeCotacoes.add(new Cotacao("AZUL4", (float) 22.58));
-        listaDeCotacoes.add(new Cotacao("VALE3", (float) 61.95));
-        listaDeCotacoes.add(new Cotacao("PETR4", (float) 21.88));
+        mapaDeCotacoes = new HashMap<String, Cotacao>();
+
+        // Para facilitar os testes, iniciamos o servidor com 3 cotacoes 
+        mapaDeCotacoes.put("AZUL4", new Cotacao("AZUL4", (float) 22.58));
+        mapaDeCotacoes.put("VALE3", new Cotacao("VALE3", (float) 61.95));
+        mapaDeCotacoes.put("PETR4", new Cotacao("PETR4", (float) 21.88));
+    
     }
     
     public void imprimirCotacoes() throws Exception {
@@ -20,13 +26,16 @@ public class GerenciadorDeCotacoes {
     
         System.out.println("Imprimindo cotacoes...");
 		
-		if (listaDeCotacoes.size() == 0) {
+		if (mapaDeCotacoes.size() == 0) {
 			System.out.println("Lista de cotacoes vazia");
 			return;
 		}
 		else {
 			StringBuilder nomes = new StringBuilder();
-			String separador = "";
+            String separador = "";
+            
+            Collection<Cotacao> listaDeCotacoes = mapaDeCotacoes.values();
+
 			for (Cotacao cotacao : listaDeCotacoes) {
             
 				nomes.append(separador);
@@ -41,17 +50,27 @@ public class GerenciadorDeCotacoes {
 
     public void atualizarCotacao(Cotacao novaCotacao) throws Exception {
         
-        for (Cotacao cotacao : listaDeCotacoes) {
-            if (cotacao.getCodigoDaAcao().equals(novaCotacao.getCodigoDaAcao())){
-                cotacao.setValor(novaCotacao.getValor());
-                return;
-            }
+        Cotacao cotacao = mapaDeCotacoes.get(novaCotacao.getCodigoDaAcao());
+
+        if (cotacao == null) {
+            mapaDeCotacoes.put(novaCotacao.getCodigoDaAcao(), novaCotacao);
         }
-        
-        listaDeCotacoes.add(novaCotacao);
-        
+        else {
+            cotacao.setValor(novaCotacao.getValor());
+        }
+
     }
 
+    public Cotacao obterCotacao(String codigoDaAcao) {
+        Cotacao cotacao = mapaDeCotacoes.get(codigoDaAcao);
+
+        if (cotacao == null) {
+            String msg = "Erro: Cotacao nao existente para o codigo: " + codigoDaAcao;
+            throw new IllegalArgumentException(msg);
+        }
+
+        return cotacao;
+    }
     
 
 }
