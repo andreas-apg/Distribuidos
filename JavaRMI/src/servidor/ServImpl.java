@@ -86,10 +86,11 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	@Override
 	public void obterCarteira(InterfaceCli referenciaCliente) throws RemoteException {
-		// TODO Auto-generated method stub
-		// Gio: da uma olhada na classe StringBuilder, eu uso ela na classe Main.
-
-		referenciaCliente.notificar("retornando acoes");
+		Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
+		Carteira carteira = usuario.getCarteira();
+		String msg = "Servidor: imprimindo carteira do usuario: " + usuario.getNome();
+		System.out.println(msg);
+		referenciaCliente.notificar(carteira.obterCarteiraComoString());
 
 	}
 

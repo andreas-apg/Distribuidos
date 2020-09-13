@@ -14,6 +14,30 @@ public class Carteira {
 		listaDeAcoes.put("PETR4", 100);
     }
 
+    public String obterCarteiraComoString() {
+        
+               
+		if (listaDeAcoes.size() == 0) {
+            return("Carteira vazia");
+		}
+		else {
+
+            StringBuilder msg = new StringBuilder();
+            msg.append("codigoDaAcao: qtde, ");
+			
+            String separador = "";
+
+            for (Map.Entry<String, Integer> entry : listaDeAcoes.entrySet()) {
+                String codigoDaAcao = entry.getKey();
+                Integer qtde = entry.getValue();
+                msg.append(separador);
+                separador = ", ";
+				msg.append(codigoDaAcao + ": " + qtde);
+            }           
+            return msg.toString();
+        }
+    }
+
     public void adicionarAcaoNaCarteira(String codigoDaAcao, Integer qtdeAAdicionar) throws Exception{
         
         // Validacao dos argumentos

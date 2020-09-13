@@ -9,9 +9,9 @@ Features:
 	-servidor nao permite a compra/venda da mesma acao para mais de um cliente (concorrencia)
 
 -Lista de Cotacoes:
-	-servidor matem uma lista de interesse de acoes para cada cliente
-	-cliente adiciona ou remove acoes desta lista
-	-cliente requisita lista atual com as respectivas cotacoes
+	-servidor matem uma lista de interesse de acoes para cada cliente - OK
+	-cliente adiciona ou remove acoes desta lista - OK
+	-cliente requisita lista atual com as respectivas cotacoes - OK
 
 -Carteira:
 	-servidor (ou cliente) mantem uma lista de acoes do cliente

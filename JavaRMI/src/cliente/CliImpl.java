@@ -24,7 +24,8 @@ public class CliImpl extends UnicastRemoteObject implements InterfaceCli {
     
     @Override
     public void notificar(String texto) throws RemoteException {
-        System.out.println("Notificacao recebida: " + texto);
+        System.out.println();
+        System.out.println("Notificacao recebida -> " + texto);
 
     }
 
