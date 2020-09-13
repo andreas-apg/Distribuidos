@@ -28,6 +28,8 @@ public class Helpers {
 
                 prazo = timeFormat.parse(userInput);
 
+                // incrementa a hora o prazo ao timestamp atual
+                // https://mkyong.com/java/java-how-to-add-days-to-current-date/
                 Date currentDate = new Date();
                 System.out.println(dateTimeFormat.format(currentDate));
         

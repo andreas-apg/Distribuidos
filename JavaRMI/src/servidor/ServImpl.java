@@ -112,4 +112,25 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 		throw new Exception("Not implemented yet");
 	}
 
+	public void imprimirUsuarios() {
+		System.out.println("Imprimindo lista de usuarios...");
+		
+		if( listaDeUsuarios.size()==0 ) {
+			System.out.println("Lista de usuarios vazia");
+			return;
+		}
+		else {
+			StringBuilder nomes = new StringBuilder();
+			String separador = "";
+			for (Usuario usuario : listaDeUsuarios) {
+				nomes.append(separador);
+  				separador = ", ";
+				nomes.append(usuario.getNome());
+			}
+			
+			System.out.println(nomes);
+		}
+		
+	}
+
 }

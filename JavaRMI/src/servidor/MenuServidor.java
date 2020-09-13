@@ -32,9 +32,10 @@ public class MenuServidor {
 
         while(true){                    
 
-            System.out.println("Digite 0 para inserir ou atualizar o preco de uma acao...");
+            System.out.println("Digite o numero da opcao desejada: ");
+            System.out.println(menuString);
 
-            //keyboard = new Scanner(System.in);
+            System.out.print("Servidor: ");
             String option = keyboard.nextLine();
             
             if(option.isEmpty()){
@@ -46,9 +47,8 @@ public class MenuServidor {
                 
                 // 1) Imprimir lista de usuarios;
                 case "1":
-                    // TODO 
-                    throw new Exception("Not implemented yet");
-                    //break;
+                    servidor.imprimirUsuarios();
+                    break;
                 
                 // 2) Imprimir o preco das acoes;
                 case "2":
