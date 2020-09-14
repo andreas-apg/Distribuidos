@@ -204,7 +204,7 @@ public class Transacao extends Thread{
     }
     
     private static void notificaUsuarios(String comprador, String vendedor, InterfaceCli compradorRef, InterfaceCli vendedorRef, String codigoDaAcao, int quantidade, float valor) throws RemoteException {
-		System.out.printf("Transacao realizada: usuario %s comprou %f %s do usuario %s por %f.", vendedor, quantidade, valor, codigoDaAcao, vendedor);
+		System.out.printf("Transacao realizada: usuario %s comprou %d %s do usuario %s por %f.", comprador, quantidade, codigoDaAcao, vendedor, valor);
 		String notificacao = quantidade + " " + codigoDaAcao + " por " + valor;
 		compradorRef.notificar("Compra realizada: " + notificacao);
 		vendedorRef.notificar("Venda realizada: " + notificacao);

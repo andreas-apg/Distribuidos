@@ -92,20 +92,20 @@ public class Carteira {
             String valores = qtdeARemover +">" + qtdeAtual;
             String msg = "Erro: Quantidade a remover eh maior que a que o usuario possui: ";
             throw new IllegalArgumentException( msg + valores);
-        }
-
-
-        // Atualiza a carteira
-
-        if(novaQtde == 0){
+        
+        } else if(novaQtde == 0){
+        
             listaDeAcoes.remove(codigoDaAcao);
-        }
-
-        if(novaQtde > 0){
+        
+        } else if(novaQtde > 0){
+            
             listaDeAcoes.replace(codigoDaAcao, novaQtde);
+        
+        } else {
+
+            throw new Exception("Erro Desconhecido: Nao foi possivel remover acao da carteira");
         }
         
-        throw new Exception("Erro Desconhecido: Nao foi possivel remover acao da carteira");
         
     }
 }
