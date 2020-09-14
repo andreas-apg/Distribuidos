@@ -27,6 +27,9 @@ public class MenuServidor {
         menuString.append("1) Imprimir lista de usuarios;\n");
         menuString.append("2) Atualizar o preco de uma acao;\n");
         menuString.append("3) Imprimir o preco das acoes;\n");
+        menuString.append("4) Imprimir a fila de transacoes;\n");
+        menuString.append("5) Imprimir a fila de compras;\n");
+        menuString.append("6) Imprimir a fila de vendas;\n");
         menuString.append("0) Sair;");
     }
 
@@ -69,16 +72,19 @@ public class MenuServidor {
                     cotacoes.imprimirCotacoes();
                     break;
                 
-                // 4) Visualizar minha carteira de acoes;   
+                // 4) Imprimir a fila de transacoes;
                 case "4":
+                	Transacao.imprimirFilaDeTransacao();
                     break;
                 
-                // 5) Visualizar minha lista de limite de ganho/perca;    
+                // 5) Imprimir a fila de compras;
                 case "5":
+                	Transacao.imprimirFilaDeCompras();
                     break;
                 
-                // 6) Atualizar minha lista de limite de ganho/perca;
+                // 6) Imprimir a fila de vendas;
                 case "6":
+                	Transacao.imprimirFilaDeVendas();
                     break;
             
                 // 7) Sair;

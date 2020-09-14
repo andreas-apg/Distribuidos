@@ -1,7 +1,9 @@
 package servidor;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -30,7 +32,7 @@ public class Transacao extends Thread{
 	int quantidade; 	// número inteiro 
 	static Map<InterfaceCli, Usuario> mapaDeUsuarios;
 	Date hora;
-	SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	static SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	// A: usa-se assim> formataData.format(hora) 
     private Thread thread;
 	
@@ -204,7 +206,7 @@ public class Transacao extends Thread{
     }
     
     private static void notificaUsuarios(String comprador, String vendedor, InterfaceCli compradorRef, InterfaceCli vendedorRef, String codigoDaAcao, int quantidade, float valor) throws RemoteException {
-		System.out.printf("Transacao realizada: usuario %s comprou %d %s do usuario %s por %f.", comprador, quantidade, codigoDaAcao, vendedor, valor);
+		System.out.printf("Transacao realizada: usuario %s comprou %d %s do usuario %s por %f.\n", comprador, quantidade, codigoDaAcao, vendedor, valor);
 		String notificacao = quantidade + " " + codigoDaAcao + " por " + valor;
 		compradorRef.notificar("Compra realizada: " + notificacao);
 		vendedorRef.notificar("Venda realizada: " + notificacao);
@@ -229,6 +231,94 @@ public class Transacao extends Thread{
 			filaDeVenda.remove(ordem);
 		}
     }
+    
+    /* A: remove ordens do usuário das filas de compra e venda
+     */
+    public static synchronized void removeDasFilas(InterfaceCli usuarioRef) {
+    	// A: criando iterador para filaDeCompra
+    	Iterator<Ordem> compraIterator = filaDeCompra.keySet().iterator();
+    	while(compraIterator.hasNext()) {
+    		Ordem compra = compraIterator.next();
+    		if(compra.getReferenciaCliente() == usuarioRef) {
+    			// A: removendo a ordem, se pertencer ao usuario
+    			compraIterator.remove();
+    		}
+    	}    	
+    	// A: criando iterador para filaDeVenda
+    	Iterator<Ordem> vendaIterator = filaDeVenda.keySet().iterator();
+    	while(vendaIterator.hasNext()) {
+    		Ordem venda = vendaIterator.next();
+    		if(venda.getReferenciaCliente() == usuarioRef) {
+    			// A: removendo a ordem, se pertencer ao usuario
+    			vendaIterator.remove();
+    		}
+    	} 
+    }
+    
+    public static void imprimirFilaDeTransacao() throws Exception {
+
+        System.out.println("Imprimindo transacoes...");
+
+        if (transacoes.size() == 0) {
+            System.out.println("Lista de transacoes vazia.");
+            return;
+        } else {
+            StringBuilder nomes = new StringBuilder();
+            String separador = "";
+
+            for (Transacao transacao : transacoes) {
+                nomes.append(separador);
+                separador = "\n";
+                nomes.append("C: " + transacao.comprador + "; acao: " + transacao.acao + "; V: " + transacao.vendedor + "; val: " + transacao.preco + "; quant: " + transacao.quantidade + " em " + formataData.format(transacao.hora));
+            }
+            System.out.println(nomes);
+        }
+    }
+    
+    public static void imprimirFilaDeCompras() throws Exception {
+
+        System.out.println("Imprimindo ordens de compra...");
+
+        if (filaDeCompra.isEmpty()) {
+            System.out.println("Fila de ordens de compra vazia.");
+            return;
+        } else {
+            StringBuilder nomes = new StringBuilder();
+            String separador = "";
+            
+            Collection<Ordem> ordensDeCompra = filaDeCompra.keySet();
+            
+            for (Ordem compra : ordensDeCompra) {
+                nomes.append(separador);
+                separador = "\n";
+                nomes.append(compra.getQuantidade() + " " + compra.getCodigoDaAcao() + " por " + compra.getValor() + ". U: " + compra.getUsuario());
+            }
+            System.out.println(nomes);
+        }
+    }
+    
+    public static void imprimirFilaDeVendas() throws Exception {
+
+        System.out.println("Imprimindo ordens de venda...");
+
+        if (filaDeVenda.isEmpty()) {
+            System.out.println("Fila de ordens de venda vazia.");
+            return;
+        } else {
+            StringBuilder nomes = new StringBuilder();
+            String separador = "";
+            
+            Collection<Ordem> ordensDeVenda = filaDeVenda.keySet();
+            
+            for (Ordem venda : ordensDeVenda) {
+                nomes.append(separador);
+                separador = "\n";
+                nomes.append(venda.getQuantidade() + " " + venda.getCodigoDaAcao() + " por " + venda.getValor() + ". U: " + venda.getUsuario());
+            }
+            System.out.println(nomes);
+        }
+    }
+    
     
     public void start() {
     	if(thread == null) {

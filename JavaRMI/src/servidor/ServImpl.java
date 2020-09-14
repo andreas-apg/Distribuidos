@@ -43,9 +43,8 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	@Override
 	public void registrarSaidaDeCliente(InterfaceCli referenciaCliente) throws RemoteException {
-
-		// TODO: Tratar saida do usuario (remover ordens, ...)
-
+		// A: removendo ordens do usuário das filas de compra e venda
+		Transacao.removeDasFilas(referenciaCliente);
 		Usuario usuario = mapaDeUsuarios.remove(referenciaCliente);
 		System.out.printf("usuário %s saiu!\n", usuario.getNome());
 
