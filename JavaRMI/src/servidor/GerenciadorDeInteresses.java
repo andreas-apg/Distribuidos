@@ -28,11 +28,7 @@ public class GerenciadorDeInteresses {
         System.out.println("Atualizando lista de Interesse para: " + usuario.getNome());
 
         Set<String> listaDeInteresse = usuario.getListaDeInteresse();
-        if (interesse.getTipoDaAtualizacao().equals("inserir")){
-
-        } else if (interesse.getTipoDaAtualizacao().equals("remover")) {
-
-        }
+        
 
         switch (interesse.getTipoDaAtualizacao()) {
             case "inserir":
@@ -66,7 +62,8 @@ public class GerenciadorDeInteresses {
                         String msg = "Acao removida da lista de interesse: " + interesse.getCodigoDaAcao();
                         referenciaCliente.notificar(msg);
                     } else {
-                        String msg = "Erro ao adicionar acao na lista de interesse, cotacao inexistente na lista: " + interesse.getCodigoDaAcao();
+                        String msg = "Erro ao remover acao na lista de interesse, cotacao inexistente na lista: ";
+                        msg = msg + interesse.getCodigoDaAcao();
                         referenciaCliente.notificar(msg);
                     }
 

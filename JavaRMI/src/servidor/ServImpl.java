@@ -97,14 +97,20 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {			
-		String limites = gerenciadorDeLimites.obterListaDeLimitesComoString(referenciaCliente);
+	public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {
+		String limites = gerenciadorDeLimites.obterListasDeLimiteComoString(referenciaCliente);
 		referenciaCliente.notificar(limites);
 	}
 
 	@Override
 	public void atualizarListaDeLimite(Limite limite) throws RemoteException {
-		// TODO Auto-generated method stub
+		try {
+			gerenciadorDeLimites.atualizarListaDeLimite(limite);
+		} catch (Exception e) {
+			limite.getReferenciaCliente().notificar("Erro ao atualizar lista de limite");
+			System.out.println("Erro ao atualizar lista de limite");
+			e.printStackTrace();
+		}
 
 	}
 

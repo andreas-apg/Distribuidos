@@ -21,6 +21,5 @@ public class MainCliente {
         menu = new MenuCliente(cliente);
         menu.start();
 
-
     }
 }
