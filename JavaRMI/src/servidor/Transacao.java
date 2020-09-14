@@ -61,8 +61,9 @@ public class Transacao extends Thread{
     	procuraVenda(ordem);
     }
     
+    
     public synchronized static void adicionaVenda(Ordem ordem) {
-    	Transacao.filaDeCompra.put(ordem, ordem.getCodigoDaAcao());
+    	Transacao.filaDeVenda.put(ordem, ordem.getCodigoDaAcao());
     	procuraCompra(ordem);
     }
     
@@ -137,7 +138,7 @@ public class Transacao extends Thread{
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), venda.getQuantidade(), compra.getValor());
 	    	}
 		} catch (Exception e) {
-			System.out.println("RemoteException: " + e.getMessage());
+			System.out.println("RemoteException em realizaCompra: " + e.getMessage());
 		}
     }
     
@@ -149,15 +150,14 @@ public class Transacao extends Thread{
     /* A: varre a fila de venda pra ver se tem alguma
      * com mesmo código de ação da compra nova.
      */
-    private static void procuraCompra(Ordem compra) {
-		/* A: só executa as comparações se as duas filas não
-		* estiveram vazias.
-		*/ 
+    private static void procuraVenda(Ordem compra) {
 		if(filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
-	    	for(Entry<Ordem, String> venda: filaDeVenda.entrySet()) {
+			System.out.println("filaDeVendacontém " + compra.getCodigoDaAcao());
+			for(Entry<Ordem, String> venda: filaDeVenda.entrySet()) {
 	    		/* A: iterando pela lista de venda, pra ver
 	    		 * se um papel bate e se são de usuários diferentes
 	    		 */
+				System.out.println(compra.getCodigoDaAcao() + ", " + venda.getValue() + ", " + compra.getUsuario() + ", " + venda.getKey().getUsuario());
 	    		if(compra.getCodigoDaAcao().equals(venda.getValue()) && !compra.getUsuario().equals(venda.getKey().getUsuario())) {
 	    			/* A: só será feita a compra se o preço for exatamente
 	    			* igual, como o pdf diz.
@@ -166,7 +166,7 @@ public class Transacao extends Thread{
 	    					try {
 								realizaCompra(compra, venda.getKey());
 							} catch (RemoteException e) {
-								System.out.println("RemoteException: " + e.getMessage());
+								System.out.println("RemoteException em procuraVenda: " + e.getMessage());
 							}
 	    					return;
 	    			}
@@ -178,15 +178,14 @@ public class Transacao extends Thread{
     /* A: varre a fila de compra pra ver se tem alguma
      * com mesmo código de ação da venda nova.
      */
-    private static void procuraVenda(Ordem venda) {
-		/* A: só executa as comparações se as duas filas não
-		* estiveram vazias.
-		*/ 
+    private static void procuraCompra(Ordem venda) {
 		if(filaDeCompra.containsValue(venda.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
-	    	for(Entry<Ordem, String> compra: filaDeCompra.entrySet()) {
+	    	System.out.println("filaDeCompra contém " + venda.getCodigoDaAcao());
+			for(Entry<Ordem, String> compra: filaDeCompra.entrySet()) {
 	    		/* A: iterando pela lista de venda, pra ver
 	    		 * se um papel bate e se são de usuários diferentes
 	    		 */
+				System.out.println(venda.getCodigoDaAcao() + ", " + compra.getValue() + ", " + venda.getUsuario() + ", " + compra.getKey().getUsuario());
 	    		if(venda.getCodigoDaAcao().equals(compra.getValue()) && !venda.getUsuario().equals(compra.getKey().getUsuario())) {
 	    			/* A: só será feita a compra se o preço for exatamente
 	    			* igual, como o pdf diz.
@@ -195,7 +194,7 @@ public class Transacao extends Thread{
 	    					try {
 								realizaCompra(venda, compra.getKey());
 							} catch (RemoteException e) {
-								System.out.println("RemoteException: " + e.getMessage());
+								System.out.println("RemoteException em procuraCompra: " + e.getMessage());
 							}
 	    					return;
 	    			}
