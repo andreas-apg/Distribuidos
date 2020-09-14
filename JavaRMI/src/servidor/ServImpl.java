@@ -17,12 +17,14 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	Transacao transacao = new Transacao(mapaDeUsuarios);
 	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
 	private GerenciadorDeInteresses gerenciadorDeInteresses;
+	private GerenciadorDeLimites gerenciadorDeLimites;
 
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
 		mapaDeUsuarios = new Hashtable<InterfaceCli, Usuario>();
 		gerenciadorDeCotacoes = new GerenciadorDeCotacoes();
 		gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
+		gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios, gerenciadorDeCotacoes);
 
 		transacao.start();
 		// creates all lists and queues
@@ -95,10 +97,9 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	}
 
 	@Override
-	public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {
-		// TODO Auto-generated method stub
-
-		referenciaCliente.notificar("retornando Limites");
+	public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {			
+		String limites = gerenciadorDeLimites.obterListaDeLimitesComoString(referenciaCliente);
+		referenciaCliente.notificar(limites);
 	}
 
 	@Override
