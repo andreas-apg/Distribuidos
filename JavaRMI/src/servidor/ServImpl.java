@@ -14,7 +14,7 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	private static final long serialVersionUID = 1L;
 
 	private Map<InterfaceCli, Usuario> mapaDeUsuarios;
-	Transacao transacao;
+	private Transacao transacao;
 	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
 	private GerenciadorDeInteresses gerenciadorDeInteresses;
 	private GerenciadorDeLimites gerenciadorDeLimites;
@@ -22,12 +22,11 @@ public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 	public ServImpl() throws RemoteException {
 		System.out.println("Executing ServImpl...");
 		mapaDeUsuarios = new Hashtable<InterfaceCli, Usuario>();
-		gerenciadorDeCotacoes = new GerenciadorDeCotacoes();
+		gerenciadorDeCotacoes = new GerenciadorDeCotacoes(mapaDeUsuarios);
 		gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
 		gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios, gerenciadorDeCotacoes);
 		transacao = new Transacao(mapaDeUsuarios);
 		transacao.start();
-		// creates all lists and queues
 	}
 
 	public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {

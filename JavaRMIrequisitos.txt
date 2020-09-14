@@ -1,12 +1,12 @@
 Features:
 
 -Compra e Venda:
-	-cliente emite ordem de compra ou venda (usuario, codigo acao, quantidade, valor, prazo)
-	-servidor realiza a negociacao quando os precos sao compativeis
-	-servidor notifica clientes de transacao(acao, quant, valor)
-	-servidor atualiza a carteira dos clientes
-	-servidor atualiza a lista de interesse dos clientes
-	-servidor nao permite a compra/venda da mesma acao para mais de um cliente (concorrencia)
+	-cliente emite ordem de compra ou venda (usuario, codigo acao, quantidade, valor, prazo)- OK
+	-servidor realiza a negociacao quando os precos sao compativeis- OK
+	-servidor notifica clientes de transacao(acao, quant, valor) - OK
+	-servidor atualiza a carteira dos clientes - OK
+	-servidor atualiza a lista de interesse dos clientes - OK
+	-servidor nao permite a compra/venda da mesma acao para mais de um cliente (concorrencia) - OK
 
 -Lista de Cotacoes:
 	-servidor matem uma lista de interesse de acoes para cada cliente - OK
@@ -14,22 +14,22 @@ Features:
 	-cliente requisita lista atual com as respectivas cotacoes - OK
 
 -Carteira:
-	-servidor (ou cliente) mantem uma lista de acoes do cliente
-	-cliente requisita sua carteira (acoes, quantidade)
+	-servidor (ou cliente) mantem uma lista de acoes do cliente - OK
+	-cliente requisita sua carteira (acoes, quantidade) - OK
 
 -Stop gain/loss:
-	-servidor matem uma lista de interesse de evento(acao, valor max, valor min, clientes interessados)
-	-servidor notifica clientes quando uma acao atinge o valor limite
-	-cliente adiciona ou remove acoes desta lista
-	-cliente requisita lista atual
+	-servidor matem uma lista de interesse de evento(acao, valor max, valor min, clientes interessados) - OK
+	-servidor notifica clientes quando uma acao atinge o valor limite -OK
+	-cliente adiciona ou remove acoes desta lista - OK
+	-cliente requisita lista atual - OK
 	
 -Mercado
-	-servidor deve ter uma lista de acoes disponiveis no mercado e seus valores iniciais
-	-servidor deve prover um meio de um adm atualizar o preco das acoes
+	-servidor deve ter uma lista de acoes disponiveis no mercado e seus valores iniciais- OK
+	-servidor deve prover um meio de um adm atualizar o preco das acoes - OK
 
 -Definir o processo de inicio do programa
-	-Procedimentos de inicio do servidor (inserir acoes, iniciar Servico Nome, iniciar servico de transacao,  ..)
-	-Procedimentos de inicio do cliente (encontrar o servidor, ...)
+	-Procedimentos de inicio do servidor (inserir acoes, iniciar Servico Nome, iniciar servico de transacao,  ..) - OK
+	-Procedimentos de inicio do cliente (encontrar o servidor, ...) - OK
 
 Metodos:
 	-Metodos do Servidor ao Cliente:
