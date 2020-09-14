@@ -86,6 +86,9 @@ public class Transacao extends Thread{
 	    		// A: atualizando carteira do vendedor
 	    		tiraDaCarteira(venda.getReferenciaCliente(), venda.getCodigoDaAcao(), compra.getQuantidade());
 	    		
+	    		// A: adicionando na lista de interesse do comprador
+	    		adicionaInteresse(compra.getReferenciaCliente(), compra.getCodigoDaAcao());	
+	    		
 	    		// A: notificações
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade(), compra.getValor());
 	    		}
@@ -101,9 +104,14 @@ public class Transacao extends Thread{
 
 	    		// A: atualizando carteira do comprador
 	    		adicionaNaCarteira(compra.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade());
+	    		
 	    		// A: atualizando carteira do vendedor
 	    		tiraDaCarteira(venda.getReferenciaCliente(), venda.getCodigoDaAcao(), compra.getQuantidade());
 	    		
+	    		// A: adicionando na lista de interesse do comprador
+	    		adicionaInteresse(compra.getReferenciaCliente(), compra.getCodigoDaAcao());	
+	    		
+	    		// A: notificações
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), compra.getQuantidade(), compra.getValor());
 	    	}
 	    	/* A: se a ordem de venda oferece menor quantidade
@@ -123,11 +131,19 @@ public class Transacao extends Thread{
 	    		// A: atualizando carteira do vendedor
 	    		tiraDaCarteira(venda.getReferenciaCliente(), venda.getCodigoDaAcao(), venda.getQuantidade());
 	    		
+	    		// A: adicionando na lista de interesse do comprador
+	    		adicionaInteresse(compra.getReferenciaCliente(), compra.getCodigoDaAcao());	
+	    		
 	    		notificaUsuarios(compra.getUsuario(), venda.getUsuario(), compra.getReferenciaCliente(), venda.getReferenciaCliente(), compra.getCodigoDaAcao(), venda.getQuantidade(), compra.getValor());
 	    	}
 		} catch (Exception e) {
 			System.out.println("RemoteException: " + e.getMessage());
 		}
+    }
+    
+    private static void adicionaInteresse(InterfaceCli referenciaUsuario, String codigoDaAcao) {
+    	Usuario usuario = mapaDeUsuarios.get(referenciaUsuario);
+		usuario.getListaDeInteresse().add(codigoDaAcao);
     }
     
     /* A: varre a fila de venda pra ver se tem alguma
