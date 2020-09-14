@@ -192,7 +192,7 @@ public class Transacao extends Thread{
 	    			*/
 	    			if(venda.getValor() == compra.getKey().getValor()) {
 	    					try {
-								realizaCompra(venda, compra.getKey());
+								realizaCompra(compra.getKey(), venda);
 							} catch (RemoteException e) {
 								System.out.println("RemoteException em procuraCompra: " + e.getMessage());
 							}
