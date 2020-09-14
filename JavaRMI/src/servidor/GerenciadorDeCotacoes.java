@@ -23,7 +23,6 @@ public class GerenciadorDeCotacoes {
     
     public void imprimirCotacoes() throws Exception {
         
-    
         System.out.println("Imprimindo cotacoes...");
 		
 		if (mapaDeCotacoes.size() == 0) {

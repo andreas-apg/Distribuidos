@@ -22,7 +22,10 @@ public class ConstrutorDeLimite extends ConstrutorDeMsg{
         limite.setTipoDaAtualizacao(Helpers.obterTipoDaAtualizacao(keyboard));
 		limite.setTipoDoLimite(Helpers.obterTipoDoLimite(keyboard));
         limite.setCodigoDaAcao(Helpers.obterCodigoDaAcao(keyboard));
-        limite.setValor(Helpers.obterValor(keyboard));
+		
+		if (limite.getTipoDoAtualizacao().equals("inserir")) {
+			limite.setValor(Helpers.obterValor(keyboard));
+		}
 
 		return limite;
 	}

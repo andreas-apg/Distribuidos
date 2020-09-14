@@ -19,74 +19,104 @@ public class GerenciadorDeLimites {
 
     public void atualizarListaDeLimite(Limite limite) throws Exception {
 
-        
+        Usuario usuario = mapaDeUsuarios.get(limite.getReferenciaCliente());
+        System.out.println("Servidor: atualizando lista de limite do usuario" + usuario.getNome());
 
-        InterfaceCli referenciaCliente = limite.getReferenciaCliente();
-        Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
-        
-        System.out.println("Atualizando lista de limite para: " + usuario.getNome());
+        String tipoDoAtualizacao = limite.getTipoDoAtualizacao();
 
-        // Set<String> listaDeInteresse = usuario.getListaDeInteresse();
-        // if (interesse.getTipoDaAtualizacao().equals("inserir")){
+        switch (tipoDoAtualizacao) {
+            case "inserir":
+                inserirNaListaDeLimite(limite);
+                break;
 
-        // } else if (interesse.getTipoDaAtualizacao().equals("remover")) {
-
-        // }
-
-        // switch (interesse.getTipoDaAtualizacao()) {
-        //     case "inserir":
-                
-        //         Cotacao cotacao;
-        //         try {
-        //             // throws exception se a cotacao nao existe
-        //             cotacao = gerenciadorDeCotacoes.obterCotacao(interesse.getCodigoDaAcao());
-                    
-        //             if (!listaDeInteresse.contains(cotacao.getCodigoDaAcao())) {
-        //                 listaDeInteresse.add(cotacao.getCodigoDaAcao());
-        //                 referenciaCliente.notificar("Adicionado " + cotacao.getCodigoDaAcao() +" a lista de interesse");
-        //             } else {
-        //                 referenciaCliente.notificar("Cotacao ja estava na lista de interesse: " + cotacao.getCodigoDaAcao());
-        //             }
-
-                    
-                    
-        //             referenciaCliente.notificar("Valor atual eh: " + cotacao.getValor());
-
-        //         } catch (IllegalArgumentException e) {
-        //             String msg = "Erro ao adicionar acao na lista de interesse, cotacao inexistente: ";
-        //             msg = msg + interesse.getCodigoDaAcao();
-        //             referenciaCliente.notificar(msg);
-        //         }
-        //         break;
-            
-        //     case "remover":
-        //             boolean result = listaDeInteresse.remove(interesse.getCodigoDaAcao());
-        //             if (result == true) {
-        //                 String msg = "Acao removida da lista de interesse: " + interesse.getCodigoDaAcao();
-        //                 referenciaCliente.notificar(msg);
-        //             } else {
-        //                 String msg = "Erro ao adicionar acao na lista de interesse, cotacao inexistente na lista: " + interesse.getCodigoDaAcao();
-        //                 referenciaCliente.notificar(msg);
-        //             }
-
-        //         break;
-        
-        //     default:
-        //         String msg = "Tipo de atualizacao invalida: " + interesse.getTipoDaAtualizacao();
-        //         throw new Exception(msg);
-        // }
-        
+            case "remover":
+                removerDaListaDeLimite(limite);
+                break;
+            default:
+                String msg = "Tipo de atualizacao invalida: " + tipoDoAtualizacao;
+                limite.getReferenciaCliente().notificar(msg);
+                break;
+        }
 
     }
 
-    public String obterListaDeLimitesComoString(InterfaceCli referenciaCliente) throws RemoteException {
+    public void inserirNaListaDeLimite(Limite limite) throws Exception {
+
+        Map<String, Cotacao> mapaDeLimite = obterMapaDeLimiteParaAtualizacao(limite);
+
+        InterfaceCli referenciaCliente = limite.getReferenciaCliente();
+        String codigoDaAcao = limite.getCodigoDaAcao();
+
+        try {
+            // throws exception se a cotacao nao existe
+            gerenciadorDeCotacoes.obterCotacao(codigoDaAcao);
+
+            Cotacao cotacao = new Cotacao(limite.getCodigoDaAcao(), limite.getValor());
+
+            if (!mapaDeLimite.containsKey(codigoDaAcao)) {
+                mapaDeLimite.put(codigoDaAcao, cotacao);
+                referenciaCliente.notificar("Adicionado " + codigoDaAcao + " a lista de limite");
+            } else {
+                referenciaCliente.notificar("Cotacao ja estava na lista de limite: " + codigoDaAcao);
+            }
+
+        } catch (IllegalArgumentException e) {
+            String msg = "Erro ao adicionar acao na lista de interesse, cotacao inexistente: ";
+            msg = msg + codigoDaAcao;
+            referenciaCliente.notificar(msg);
+        }
+    }
+
+
+
+    public void removerDaListaDeLimite(Limite limite) throws Exception {
+        
+        Map<String, Cotacao> mapaDeLimite = obterMapaDeLimiteParaAtualizacao(limite);
+
+        String codigoDaAcao = limite.getCodigoDaAcao();
+        InterfaceCli referenciaCliente = limite.getReferenciaCliente();
+
+        Cotacao result = mapaDeLimite.remove(codigoDaAcao);
+
+        if (result != null) {
+            String msg = "Acao removida da lista de limite: " + codigoDaAcao;
+            referenciaCliente.notificar(msg);
+        } else {
+            String msg = "Erro ao remover acao da lista de limite, cotacao inexistente na lista: "
+                    + codigoDaAcao;
+            referenciaCliente.notificar(msg);
+        }
+
+    }
+
+    private Map<String, Cotacao> obterMapaDeLimiteParaAtualizacao(Limite limite) throws Exception {
+        Usuario usuario = mapaDeUsuarios.get(limite.getReferenciaCliente());
+        String tipoDoLimite = limite.getTipoDoLimite();
+
+        Map<String, Cotacao> mapaDeLimite;
+
+        switch (tipoDoLimite) {
+            case "ganho":
+                mapaDeLimite = usuario.getMapaDeLimiteDeGanho();
+                break;
+            case "perda":
+                mapaDeLimite = usuario.getMapaDeLimiteDePerda();
+                break;
+            default:
+                String msg = "Tipo de limite invalido: " + tipoDoLimite;
+                throw new Exception(msg);
+        }
+        return mapaDeLimite;
+    }
+
+    public String obterListasDeLimiteComoString(InterfaceCli referenciaCliente) throws RemoteException {
 
         Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
         System.out.println("Servidor: Imprimindo lista de limite do usuario" + usuario.getNome());
 
         Map<String, Cotacao> mapaDeLimiteDeGanho = usuario.getMapaDeLimiteDeGanho();
         Map<String, Cotacao> mapaDeLimiteDePerda = usuario.getMapaDeLimiteDePerda();
-        
+
         StringBuilder msg = new StringBuilder();
         msg.append("Lista de Limite - (codigoDaAcao: valor):\n");
         gerarMsgDeLimite(mapaDeLimiteDeGanho, "ganho", msg);
@@ -97,14 +127,14 @@ public class GerenciadorDeLimites {
 
     private void gerarMsgDeLimite(Map<String, Cotacao> mapaDeLimite, String tipo, StringBuilder msg) {
 
-		if (mapaDeLimite.size() == 0) {
-             msg.append("Lista de limite de " + tipo + " vazia\n");		
+        if (mapaDeLimite.size() == 0) {
+            msg.append("Lista de limite de " + tipo + " vazia\n");
         }
-            
-		else {
 
-            msg.append("Lista de limite de" + tipo + " : ");
-			
+        else {
+
+            msg.append("Lista de limite de " + tipo + " : ");
+
             String separador = "";
 
             for (Map.Entry<String, Cotacao> entry : mapaDeLimite.entrySet()) {
@@ -112,12 +142,11 @@ public class GerenciadorDeLimites {
                 float valor = entry.getValue().getValor();
                 msg.append(separador);
                 separador = ", ";
-				msg.append(codigoDaAcao + ": " + valor);
+                msg.append(codigoDaAcao + ": " + valor);
             }
-			
+
         }
         msg.append("\n");
     }
-    
-    
+
 }
