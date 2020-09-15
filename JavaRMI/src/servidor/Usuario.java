@@ -26,9 +26,7 @@ public class Usuario {
 
         this.setNome(nome);
         this.referenciaCliente = referenciaCliente;
-
-        // Para fins de teste, adicionamos 1 acao na lista de interesses
-        this.listaDeInteresse.add("AZUL4");
+        
         this.mapaDeLimiteDeGanho.put("AZUL4", new Cotacao("AZUL4", (float) 70));
         this.mapaDeLimiteDeGanho.put("PETR4", new Cotacao("PETR4", (float) 70));
         //this.mapaDeLimiteDePerda.put("AZUL4", new Cotacao("AZUL4", (float) 10));
