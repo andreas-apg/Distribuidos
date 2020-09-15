@@ -9,6 +9,8 @@ public class MainServidor {
 
     static MenuServidor menu;
 
+    // Classe de inicio do servidor
+    // Inicializa o servidor e o menu
     public static void main(String[] args) {
 
         try {

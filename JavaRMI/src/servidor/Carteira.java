@@ -3,6 +3,7 @@ package servidor;
 import java.util.HashMap;
 import java.util.Map;
 
+// Classe utilizada no Usuario para armazenar as acoes que ele possui
 public class Carteira {
     
     private Map<String, Integer> listaDeAcoes ;
@@ -14,9 +15,9 @@ public class Carteira {
 		listaDeAcoes.put("PETR4", 100);
     }
 
+    // retorna uma string para notificar o usario das suas acoes atuais
     public String obterCarteiraComoString() {
         
-               
 		if (listaDeAcoes.size() == 0) {
             return("Carteira vazia");
 		}
@@ -38,6 +39,7 @@ public class Carteira {
         }
     }
 
+    // adiciona acao na carteira do usuario
     public void adicionarAcaoNaCarteira(String codigoDaAcao, Integer qtdeAAdicionar) throws Exception{
         
         // Validacao dos argumentos
@@ -65,6 +67,7 @@ public class Carteira {
 
     }
 
+    // remove acao da carteira do usuario
     public void removerAcaoDaCarteira(String codigoDaAcao, Integer qtdeARemover) throws Exception {
         
         // Validacao dos argumentos

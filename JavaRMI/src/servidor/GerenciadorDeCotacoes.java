@@ -9,7 +9,8 @@ import interfaces.InterfaceCli;
 
 // Classe do Servidor para ser utilizada em testes
 // Permite simular o mercado atualizando manualmente o preco das acoes,
-// e tambem imprimir o preco atual
+// e tambem imprimir o preco atual, lista de transacoes realizadas e fila de
+// compra e venda
 public class GerenciadorDeCotacoes {
 
     private Map<String, Cotacao> mapaDeCotacoes;
@@ -26,6 +27,7 @@ public class GerenciadorDeCotacoes {
 
     }
 
+    // imprime o valor atual das cotacoes
     public void imprimirCotacoes() throws Exception {
 
         System.out.println("Imprimindo cotacoes...");
@@ -51,6 +53,7 @@ public class GerenciadorDeCotacoes {
 
     }
 
+    // Permite atualizar manualmente o valor de uma determinada acao
     public void atualizarCotacao(Cotacao novaCotacao) throws Exception {
 
         Cotacao cotacao = mapaDeCotacoes.get(novaCotacao.getCodigoDaAcao());
@@ -65,6 +68,7 @@ public class GerenciadorDeCotacoes {
 
     }
 
+    // Retorna o valor atual de uma determinada acao
     public Cotacao obterCotacao(String codigoDaAcao) {
         Cotacao cotacao = mapaDeCotacoes.get(codigoDaAcao);
 
@@ -76,6 +80,9 @@ public class GerenciadorDeCotacoes {
         return cotacao;
     }
 
+    // Metodo usado apos cada atualizacao de preco para verificar
+    // os limites de cada usuario. Se algum limite for excedido,
+    // chama um metodo para notifica-lo
     private void verificarLimitesDosUsuarios(Cotacao novaCotacao) {
         String codigoDaAcao = novaCotacao.getCodigoDaAcao();
         Float novoValor = novaCotacao.getValor();
@@ -105,6 +112,7 @@ public class GerenciadorDeCotacoes {
         }
     }
 
+    // metodo utilizado pra notificar o usuario quando um dos seus limites foi excedido
     private void notificarUsuario(String codigoDaAcao, Float novoValor, Usuario usuario,
         Cotacao cotacao, String tipo) {
 

@@ -7,6 +7,8 @@ import java.util.Set;
 import common.Interesse;
 import interfaces.InterfaceCli;
 
+// Classe do servidor responsavel por gerenciar os interesses do usuario,
+// como atualizar e imprimir
 public class GerenciadorDeInteresses {
 
     private Map<InterfaceCli, Usuario> mapaDeUsuarios;
@@ -18,9 +20,8 @@ public class GerenciadorDeInteresses {
         this.gerenciadorDeCotacoes = gerenciadorDeCotacoes;
     }
 
+    // Inseri ou remove um interesse na list de usuario, conforme o objeto Interesse
     public void atualizarListaDeInteresse(Interesse interesse) throws Exception {
-
-        
 
         InterfaceCli referenciaCliente = interesse.getReferenciaCliente();
         Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
@@ -77,6 +78,8 @@ public class GerenciadorDeInteresses {
 
     }
 
+    // Pesquisa a lista de interesse do usuario e o valor atual da cotacao pra elas
+    // Por fim, notifica o usuario das cotacoes
     public void obterCotacoesDaListaDeInteresse(InterfaceCli referenciaCliente) throws RemoteException {
 
         Usuario usuario = mapaDeUsuarios.get(referenciaCliente);

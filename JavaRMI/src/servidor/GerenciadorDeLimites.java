@@ -6,6 +6,8 @@ import java.util.Map;
 import common.Limite;
 import interfaces.InterfaceCli;
 
+// Classe do servidor responsavel por gerenciar os limites
+// do usuario, como fazer operacoes de insercao e remocao
 public class GerenciadorDeLimites {
 
     private Map<InterfaceCli, Usuario> mapaDeUsuarios;
@@ -17,6 +19,8 @@ public class GerenciadorDeLimites {
         this.gerenciadorDeCotacoes = gerenciadorDeCotacoes;
     }
 
+    // Verifica o tipo da atualizacao e chama os metodos correspondentes
+    // Insercao ou remocao
     public void atualizarListaDeLimite(Limite limite) throws Exception {
 
         Usuario usuario = mapaDeUsuarios.get(limite.getReferenciaCliente());
@@ -40,6 +44,7 @@ public class GerenciadorDeLimites {
 
     }
 
+    // Inseri na lista de limite e notifica o cliente
     public void inserirNaListaDeLimite(Limite limite) throws Exception {
 
         Map<String, Cotacao> mapaDeLimite = obterMapaDeLimiteParaAtualizacao(limite);
@@ -68,7 +73,7 @@ public class GerenciadorDeLimites {
     }
 
 
-
+    // Remove da lista de limite e notifica o cliente
     public void removerDaListaDeLimite(Limite limite) throws Exception {
         
         Map<String, Cotacao> mapaDeLimite = obterMapaDeLimiteParaAtualizacao(limite);
@@ -89,6 +94,8 @@ public class GerenciadorDeLimites {
 
     }
 
+    // Analisa o tipo de limite a ser atualizado e fornece o mapa de ganho ou perda
+    // do usuario, conforme o limite para o metodo de atualizacao
     private Map<String, Cotacao> obterMapaDeLimiteParaAtualizacao(Limite limite) throws Exception {
         Usuario usuario = mapaDeUsuarios.get(limite.getReferenciaCliente());
         String tipoDoLimite = limite.getTipoDoLimite();
@@ -109,6 +116,7 @@ public class GerenciadorDeLimites {
         return mapaDeLimite;
     }
 
+    // Fornece a lista de limite como string para ser usado em uma notificao ao usuario
     public String obterListasDeLimiteComoString(InterfaceCli referenciaCliente) throws RemoteException {
 
         Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
@@ -125,6 +133,7 @@ public class GerenciadorDeLimites {
         return msg.toString();
     }
 
+    // Gera a lista de limite para impressao no usuario
     private void gerarMsgDeLimite(Map<String, Cotacao> mapaDeLimite, String tipo, StringBuilder msg) {
 
         if (mapaDeLimite.size() == 0) {

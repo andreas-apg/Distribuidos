@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 import common.Helpers;
 
+// Essa Classe é reponsavel por apresentar o menu do Servidor
+// Para o Usuario e pegar a opcao dele. No fim,ela chama a classe
+// responsavel para executar o servico.
 public class MenuServidor {
 
     private ServImpl servidor;
@@ -20,6 +23,7 @@ public class MenuServidor {
                 
     }
 
+    // Constroi a string a ser impressa no menu
     private void buildMenuString() {
         menuString = new StringBuilder();
 
@@ -33,6 +37,7 @@ public class MenuServidor {
         menuString.append("0) Sair;");
     }
 
+    // Apresenta o menu para o usario
     public void start() throws Exception {
 
         while(true){                    

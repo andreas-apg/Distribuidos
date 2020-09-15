@@ -7,6 +7,7 @@ import java.util.Set;
 
 import interfaces.InterfaceCli;
 
+// Classe responsavel por armazenar os dados do usuario
 // Usuario possui nome, carteira, lista de interesse e lista de limite perda/ganho
 public class Usuario {
 
@@ -61,6 +62,7 @@ public class Usuario {
         return referenciaCliente;
     }
 
+    // Dois usuarios sao iguais se possuem a mesma referenciaCliente
     @Override
     public boolean equals(Object o){
         if (o == this) { 

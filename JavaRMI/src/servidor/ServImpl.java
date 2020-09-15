@@ -9,6 +9,7 @@ import java.util.Map;
 import common.*;
 import interfaces.*;
 
+// Implementacao do Servidor
 public class ServImpl extends UnicastRemoteObject implements InterfaceServ {
 
 	private static final long serialVersionUID = 1L;

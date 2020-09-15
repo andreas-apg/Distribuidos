@@ -1,5 +1,6 @@
 package servidor;
 
+// Classe usada para armazenar um par de codigo e valor de uma acao
 public class Cotacao {
 
     private String codigoDaAcao;
