@@ -1,0 +1,9 @@
+Modificar a aplicação anterior do Mercado da Bolsa de Ações de modo que cliente e servidor estejam implementados em linguagens de programação diferentes (claro que o mais fácil é alterar a linguagem de programação do cliente). Para prover a comunicação entre os clientes e o servidor deve-se utilizar Web Services (SOAP ou REST). Os métodos da aplicação 3 continuam os mesmos que estão definidos na aplicação 2.  
+
+Para o envio das notificações, vocês podem usar SSE (Server-Sent Events), criar um serviço web no cliente, entre outras possibilidades. 
+
+Seguem alguns tutoriais sobre SSE:
+
+"Using server-sent events". Disponível em:<https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events>
+
+"A Look at Server-Sent Events". Disponível em:<https://medium.com/conectric-networks/a-look-at-server-sent-events-54a77f8d6ff7> 
