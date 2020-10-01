@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.webserver.javawebserver.models.*;
+import br.edu.webserver.javawebserver.services.ServicoDeTeste;
 
 /**
  * ExampleController
@@ -18,9 +19,21 @@ import br.edu.webserver.javawebserver.models.*;
 @RequestMapping("api/")
 public class ExampleController {
 
+    // Service Dependency Injection
+    @Autowired
+	private ServicoDeTeste servicoDeTeste;
+
+    // POST endpoint at http://localhost:8080/api/ordem
 	@PostMapping(value = "/ordem", consumes = "application/json")
 	public ResponseEntity<String> criarOrdem(@RequestBody Ordem newOrdem) {
-        System.out.println(newOrdem.toString());        
+        
+        // Imprime o JSON recebido no POST como Java Object
+        System.out.println(newOrdem.toString());    
+
+        // Executa um servico para saber que ta funcionando
+        servicoDeTeste.run();    
+
+        // Retorna uma resposta 200 OK com String no corpo
         return ResponseEntity.ok("Hello World!");
     }
     
