@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.webserver.javawebserver.models.*;
+import br.edu.webserver.javawebserver.services.broker.ServicoBroker;
 import br.edu.webserver.javawebserver.services.ServicoDeTeste;
 
 /**
@@ -21,7 +22,7 @@ public class ExampleController {
 
     // Service Dependency Injection
     @Autowired
-	private ServicoDeTeste servicoDeTeste;
+	private ServicoBroker broker;
 
     // POST endpoint at http://localhost:8080/api/ordem
 	@PostMapping(value = "/ordem", consumes = "application/json")
@@ -31,7 +32,7 @@ public class ExampleController {
         System.out.println(newOrdem.toString());    
 
         // Executa um servico para saber que ta funcionando
-        servicoDeTeste.run();    
+        broker.registrarOrdem(newOrdem);
 
         // Retorna uma resposta 200 OK com String no corpo
         return ResponseEntity.ok("Hello World!");
