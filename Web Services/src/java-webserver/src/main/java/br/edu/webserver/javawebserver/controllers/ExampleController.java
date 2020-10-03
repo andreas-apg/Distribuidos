@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.webserver.javawebserver.models.*;
 import br.edu.webserver.javawebserver.services.broker.ServicoBroker;
-import br.edu.webserver.javawebserver.services.ServicoDeTeste;
 
 /**
  * ExampleController
@@ -26,11 +25,9 @@ public class ExampleController {
 
     // POST endpoint at http://localhost:8080/api/ordem
 	@PostMapping(value = "/ordem", consumes = "application/json")
-	public ResponseEntity<String> criarOrdem(@RequestBody Ordem newOrdem) {
-        
-        // Imprime o JSON recebido no POST como Java Object
-        System.out.println(newOrdem.toString());    
+	public ResponseEntity<String> criarOrdem(@RequestBody Ordem newOrdem) {                
 
+        newOrdem.setCodigoDaAcao(newOrdem.getCodigoDaAcao().toUpperCase());
         // Executa um servico para saber que ta funcionando
         broker.registrarOrdem(newOrdem);
 
