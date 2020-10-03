@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import br.edu.webserver.javawebserver.models.Ordem;
 import br.edu.webserver.javawebserver.models.Usuario;
+import lombok.Data;
 
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat;
  * uma determinada acao e olha
  * o que possui a hora mais recente.
  */ 
+@Data
 public class Transacao {
 	/* A: mudar vendedor e comprador
 	* para usuário.
@@ -259,24 +261,26 @@ public class Transacao {
     	} 
     }
     
-    public static void imprimirFilaDeTransacao() throws Exception {
+    public static Vector<Transacao> getFilaDeTransacoes() {
 
-        System.out.println("Imprimindo transacoes...");
+		return transacoes;
 
-        if (transacoes.size() == 0) {
-            System.out.println("Lista de transacoes vazia.");
-            return;
-        } else {
-            StringBuilder nomes = new StringBuilder();
-            String separador = "";
+        // System.out.println("Imprimindo transacoes...");
 
-            for (Transacao transacao : transacoes) {
-                nomes.append(separador);
-                separador = "\n";
-                nomes.append("C: " + transacao.comprador + "; acao: " + transacao.acao + "; V: " + transacao.vendedor + "; val: " + transacao.preco + "; quant: " + transacao.quantidade + " em " + formataData.format(transacao.hora));
-            }
-            System.out.println(nomes);
-        }
+        // if (transacoes.size() == 0) {
+        //     System.out.println("Lista de transacoes vazia.");
+        //     return;
+        // } else {
+        //     StringBuilder nomes = new StringBuilder();
+        //     String separador = "";
+
+        //     for (Transacao transacao : transacoes) {
+        //         nomes.append(separador);
+        //         separador = "\n";
+        //         nomes.append("C: " + transacao.comprador + "; acao: " + transacao.acao + "; V: " + transacao.vendedor + "; val: " + transacao.preco + "; quant: " + transacao.quantidade + " em " + formataData.format(transacao.hora));
+        //     }
+        //     System.out.println(nomes);
+        // }
     }
     
     public static void imprimirFilaDeCompras() throws Exception {

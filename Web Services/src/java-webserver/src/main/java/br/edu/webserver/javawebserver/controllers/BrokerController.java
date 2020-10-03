@@ -12,12 +12,11 @@ import br.edu.webserver.javawebserver.models.*;
 import br.edu.webserver.javawebserver.services.broker.ServicoBroker;
 
 /**
- * ExampleController
  * 
  */
 @RestController
 @RequestMapping("api/")
-public class ExampleController {
+public class BrokerController {
 
     // Service Dependency Injection
     @Autowired
@@ -36,7 +35,7 @@ public class ExampleController {
     }
     
 
-    @GetMapping("/members")
+    @GetMapping("/ping")
     public ResponseEntity<String> all() {
         return ResponseEntity.ok("Hello World!");
     }
