@@ -24,8 +24,9 @@ public class Ordem {
 	private float valor; // em reais
 	private int quantidade;
 	private String prazo;
-
 	
+	public Ordem() {
+	}
 	@Override
 	public String toString() {
 		return ("Nova ordem de " + tipoDaOrdem + " do usuario " + nomeDeUsuario);

@@ -6,7 +6,6 @@ import br.edu.webserver.javawebserver.models.Ordem;
 
 @Service
 public class ServicoBroker {
-    MenuBroker menu;
 
 	// private Map<String, Usuario> mapaDeUsuarios;
 	// private Transacao transacao;
@@ -16,10 +15,6 @@ public class ServicoBroker {
     
     // Classe de inicio do servidor
     // Inicializa o servidor e o menu
-    public ServicoBroker() throws Exception {
-        menu = new MenuBroker(this);
-        menu.start();
-    }
 
 	// public ServImpl() throws RemoteException {
 	// 	System.out.println("Executing ServImpl...");
@@ -67,7 +62,7 @@ public class ServicoBroker {
 		// 	ordem.getReferenciaCliente().notificar("Ordem de venda registrada!");
 		// 	ordem.start();
         // }
-        System.out.println("Funciona?");
+        System.out.println(ordem.toString());
 	}
 
 	// @Override

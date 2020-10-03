@@ -39,8 +39,8 @@ public class ExampleController {
     }
     
 
-    // @GetMapping("/members")
-    // public List<Member> all() {
-    //    return memberService.getAllMembers();
-    // }
+    @GetMapping("/members")
+    public ResponseEntity<String> all() {
+        return ResponseEntity.ok("Hello World!");
+    }
 }

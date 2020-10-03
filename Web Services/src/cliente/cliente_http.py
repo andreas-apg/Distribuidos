@@ -19,6 +19,7 @@ class ClienteHttp(Loggable,threading.Thread):
     }
     
     def __init__(self, username):
+        super().__init__()
         threading.Thread.__init__(self, daemon=True)
         self.username = username
 
