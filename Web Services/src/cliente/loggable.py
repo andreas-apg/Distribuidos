@@ -8,6 +8,8 @@ class Loggable:
 
     def log_error(self, msg:str, exc:Exception=None):
         """ Metodo para imprimir erros no console"""
+        if exc == None:
+            exc = sys.exc_info()[0]
         logging.error(msg=self.class_name + msg, exc_info=exc)
 
     def log_info(self, msg:str):

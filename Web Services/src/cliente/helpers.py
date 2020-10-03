@@ -92,6 +92,8 @@ class Helpers(Loggable):
             user_input = input("Digite o tipo da ordem (Ex:'compra' ou 'venda'): ")
             user_input = user_input.lower()
 
+            if(user_input) == '':
+                return (TipoDaOrdem.COMPRA.value)
             if(user_input) == 'c':
                 return (TipoDaOrdem.COMPRA.value)
             elif(user_input) == 'v':
@@ -114,9 +116,11 @@ class Helpers(Loggable):
             user_input = input("Digite o tipo da atualizacao (Ex:'inserir' ou 'remover'): ")
             user_input = user_input.lower()
 
-            if(user_input) == 'c':
+            if(user_input) == '':
                 return (TipoDaAtualizacao.INSERIR.value)
-            elif(user_input) == 'v':
+            if(user_input) == 'i':
+                return (TipoDaAtualizacao.INSERIR.value)
+            elif(user_input) == 'r':
                 return (TipoDaAtualizacao.REMOVER.value)
             else:
                 try:
@@ -127,7 +131,7 @@ class Helpers(Loggable):
                 except:
                     self.log_error(msg="Erro ao obter tipo da atualizacao")
                     raise
-                return tipo
+                return user_input
 
     
     def obter_tipo_do_limite(self) -> str:
@@ -137,6 +141,8 @@ class Helpers(Loggable):
             user_input = input("Digite o tipo do limite (Ex:'ganho' ou 'perda'): ")
             user_input = user_input.lower()
 
+            if(user_input) == '':
+                return (TipoDoLimite.GANHO.value)
             if(user_input) == 'g':
                 return (TipoDoLimite.GANHO.value)
             elif(user_input) == 'p':
@@ -150,7 +156,7 @@ class Helpers(Loggable):
                 except:
                     self.log_error(msg="Erro ao obter tipo do limite")
                     raise
-                return tipo
+                return user_input
 
 
 # metodo para testar as funcoes      

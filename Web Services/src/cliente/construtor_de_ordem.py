@@ -3,6 +3,7 @@ from helpers import Helpers
 from loggable import Loggable
 
 class ConstrutorDeOrdem(Loggable):
+    """ Classe para obter dados do usario (com Helpers) e contruir uma ordem """
 
     def __init__(self, nome_de_usuario):
         super().__init__()
@@ -22,6 +23,3 @@ class ConstrutorDeOrdem(Loggable):
             raise
 
         return self.ordem
-
-
-    
