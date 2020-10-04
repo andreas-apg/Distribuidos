@@ -1,0 +1,27 @@
+1) mostrar a carteira (4) - cada usuário tem 3 ações;
+2) mostra lista de interesse de cada usuário (2) - está vazia
+3) fazer uma transação:
+	3.1) usuário 1 faz venda (1) - AZUL4
+	3.2) usuário 2 faz uma compra (1) - AZUL4
+	3.3) imprime a lista de interesse (2) do cara que comprou
+	3.4) imprime lista de transações no servidor.
+4) imprime na lista de interesse (2) do usuário a
+5) inserir PETR4 na lista de interesse (3) do usuário a
+6) imprime a lista de interesse (2) do usuário a
+)imprime lista de interesse (2) do usuario b (tem que ter azul4)
+	4.2) remover AZUL4 (3)
+	4.3) imprime de novo (2)- é pra estar vazia
+6) limite e ganho
+	6.1) mostra lista de cotação do servidor
+	6.2) visualizar lista de ganho e perda (5) nos dois usuários
+	6.3) usuário A, inserir limite de perda (6) - VALE3 - 10
+	6.4) imprime de novo do A (5)
+	6.4) no usuario B, remover da lista de ganho AZUL4 (6)
+	6.5) visualizar lista do B (5)
+	6.6) atualizar preço da VALE3 - coloca 5, valor menor que o 10 de antes
+	6.7) mostrar a notificação do limite de perda no usuário a
+	6.8) atualizar preço de ação. PETR4 valor:   80
+	6.9) mostrar que notificou os dois
+	6.10) atualizar preço da AZUL4 no servidor pra 70 - valor igual
+	6.11) notificou nos dois
+
