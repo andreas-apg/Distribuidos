@@ -169,35 +169,103 @@ public class Transacao {
 		
 		
 		if(filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
+			Transacao transacao;
 			System.out.println("filaDeVendacontém " + compra.getCodigoDaAcao());
-			for(Entry<Ordem, String> venda: filaDeVenda.entrySet()) {
-	    		/* A: iterando pela lista de venda, pra ver
-	    		 * se um papel bate e se são de usuários diferentes
-	    		 */
-				System.out.println(filaDeVenda.entrySet().size());
-				System.out.println(compra.getCodigoDaAcao() + ", " + venda.getValue() + ", " + compra.getNomeDeUsuario() + ", " + venda.getKey().getNomeDeUsuario());
-	    		if(compra.getCodigoDaAcao().equals(venda.getValue()) && !compra.getNomeDeUsuario().equals(venda.getKey().getNomeDeUsuario())) {
+			Iterator<Ordem> iteratorVenda = filaDeVenda.keySet().iterator();
+			while((iteratorVenda.hasNext()) && (compra.getQuantidade() > 0)){
+				Ordem venda = iteratorVenda.next();
+				if(compra.getCodigoDaAcao().equals(venda.getCodigoDaAcao()) && !compra.getNomeDeUsuario().equals(venda.getNomeDeUsuario())) {
 	    			/* A: só será feita a compra se o preço for exatamente
 	    			* igual, como o pdf diz.
 	    			*/
-	    			if(compra.getValor() == venda.getKey().getValor()) {
-						System.out.println("Compra: " + compra.getQuantidade());
-						if(compra.getQuantidade() == 0){
-							System.out.println("Acabou!");
-							return;
-						}
-						else{
-	    					try {
-								realizaCompra(compra, venda.getKey());
-							} catch (RemoteException e) {
-								System.out.println("RemoteException em procuraVenda: " + e.getMessage());
+	    			if(compra.getValor() == venda.getValor()) {
+						try {
+							/* A: se a ordem de venda oferece maior quantidade
+							* que a de compra, esgotará a de compra.
+							*/;
+							if(venda.getQuantidade() > compra.getQuantidade()) {
+								transacao = new Transacao(venda.getNomeDeUsuario(), compra.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
+								transacoes.add(transacao);
+								// A: atualizando a quantidade na ordem de venda
+								venda.setQuantidade(venda.getQuantidade() - compra.getQuantidade());
+								
+								// A: removendo a ordem de compra da filaDeCompra
+								filaDeCompra.remove(compra);
+								
+								// A: atualizando carteira do comprador
+								adicionaNaCarteira(compra.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade());
+								// A: atualizando carteira do vendedor
+								tiraDaCarteira(venda.getNomeDeUsuario(), venda.getCodigoDaAcao(), compra.getQuantidade());
+								
+								// A: adicionando na lista de interesse do comprador
+								adicionaInteresse(compra.getNomeDeUsuario(), compra.getCodigoDaAcao());	
+								
+								// A: notificações
+								notificaUsuarios(compra.getNomeDeUsuario(), venda.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade(), compra.getValor());
+								
+								// A: esgotando a ordem de compra pra 0. Precisa pra sair do loop.
+								compra.setQuantidade(0);									
 							}
+							/* A: se quantidade de compra e venda forem iguais, os dois
+								* sairão das filas.
+								*/
+							else if(venda.getQuantidade() == compra.getQuantidade()) {
+								transacao = new Transacao(venda.getNomeDeUsuario(), compra.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getValor(), compra.getQuantidade());
+								transacoes.add(transacao);
+								// A: removendo as ordens das filas
+								iteratorVenda.remove();
+								filaDeCompra.remove(compra);
+				
+								// A: atualizando carteira do comprador
+								adicionaNaCarteira(compra.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade());
+								
+								// A: atualizando carteira do vendedor
+								tiraDaCarteira(venda.getNomeDeUsuario(), venda.getCodigoDaAcao(), compra.getQuantidade());
+								
+								// A: adicionando na lista de interesse do comprador
+								adicionaInteresse(compra.getNomeDeUsuario(), compra.getCodigoDaAcao());	
+								
+								// A: notificações
+								notificaUsuarios(compra.getNomeDeUsuario(), venda.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getQuantidade(), compra.getValor());
+								
+								// A: esgotando as ordens de compra e venda pra 0.
+								compra.setQuantidade(0);
+								venda.setQuantidade(0);
+							}
+							/* A: se a ordem de venda oferece menor quantidade
+								* que a de compra, esgotará a de venda.
+								*/
+							else if(venda.getQuantidade() < compra.getQuantidade()) {
+								transacao = new Transacao(venda.getNomeDeUsuario(), compra.getNomeDeUsuario(), compra.getCodigoDaAcao(), compra.getValor(), venda.getQuantidade());
+								transacoes.add(transacao);
+				
+								// A: removendo a ordem de venda da filaDeVenda
+								iteratorVenda.remove();
+								
+								// A: atualizando carteira do comprador				
+								adicionaNaCarteira(compra.getNomeDeUsuario(), compra.getCodigoDaAcao(), venda.getQuantidade());
+								// A: atualizando carteira do vendedor
+								tiraDaCarteira(venda.getNomeDeUsuario(), venda.getCodigoDaAcao(), venda.getQuantidade());
+								
+								// A: atualizando a quantidade da fila de compra
+								compra.setQuantidade(compra.getQuantidade() - venda.getQuantidade());
+
+								// A: adicionando na lista de interesse do comprador
+								adicionaInteresse(compra.getNomeDeUsuario(), compra.getCodigoDaAcao());	
+								
+								notificaUsuarios(compra.getNomeDeUsuario(), venda.getNomeDeUsuario(), compra.getCodigoDaAcao(), venda.getQuantidade(), compra.getValor());
+							
+								// A: esgotando a ordem de venda.
+								venda.setQuantidade(0);
+							}
+						} catch (Exception e) {
+							System.out.println("Exception em realizaCompra: " + e.getMessage());
 						}
-	    			}
-	    		}			    			
+					}
+	    		}
 	    	}
-	    }
-    }
+		}
+	}
     
     /* A: varre a fila de compra pra ver se tem alguma
      * com mesmo código de ação da venda nova.
@@ -227,7 +295,7 @@ public class Transacao {
 	    }
     }
     
-    private static void notificaUsuarios(String comprador, String vendedor, String codigoDaAcao, int quantidade, float valor) throws RemoteException {
+    private synchronized static void notificaUsuarios(String comprador, String vendedor, String codigoDaAcao, int quantidade, float valor) throws RemoteException {
 		System.out.printf("Transacao realizada: usuario %s comprou %d %s do usuario %s por %f.\n", comprador, quantidade, codigoDaAcao, vendedor, valor);
 		String notificacao = quantidade + " " + codigoDaAcao + " por " + valor;
 

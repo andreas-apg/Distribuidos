@@ -6,35 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "ordem",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"nomeDeUsuario\": \"maria\",\n    \"tipoDaOrdem\": \"venda\",\n    \"codigoDaAcao\": \"azul4\",\n    \"prazo\": \"00:05:00\",\n    \"valor\": 22.0,\n    \"quantidade\": 100\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/ordem",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"ordem"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "notificacao",
 			"protocolProfileBehavior": {
 				"strictSSL": false
@@ -75,6 +46,35 @@
 			"response": []
 		},
 		{
+			"name": "ordem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nomeDeUsuario\": \"maria\",\n    \"tipoDaOrdem\": \"venda\",\n    \"codigoDaAcao\": \"azul4\",\n    \"prazo\": \"00:05:00\",\n    \"valor\": 22.0,\n    \"quantidade\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/ordem",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"ordem"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "transacoes",
 			"request": {
 				"method": "GET",
@@ -109,6 +109,101 @@
 					"path": [
 						"api",
 						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "carteira",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "interesses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/carteira?nomeDeUsuario=joao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"carteira"
+					],
+					"query": [
+						{
+							"key": "nomeDeUsuario",
+							"value": "joao"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inserir interesse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nomeDeUsuario\": \"joao\",\n    \"codigoDaAcao\": \"azul4\",\n    \"tipoDaAtualizacao\": \"inserir\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/interesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"interesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remover interesse",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nomeDeUsuario\": \"joao\",\n    \"codigoDaAcao\": \"azul4\",\n    \"tipoDaAtualizacao\": \"remover\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/interesses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"interesses"
 					]
 				}
 			},
