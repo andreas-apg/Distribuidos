@@ -60,9 +60,6 @@ public class ServicoBroker {
 			Transacao.adicionaCompra(ordem);
 			
 			notificaUsuario(ordem.getNomeDeUsuario(), "Ordem de compra registrada!");
-			
-			// TODO: matar a ordme quando acabar o tempo
-			// ordem.start();
 
 		} else if (ordem.getTipoDaOrdem().equals("venda")) {
 			Transacao.adicionaVenda(ordem);
