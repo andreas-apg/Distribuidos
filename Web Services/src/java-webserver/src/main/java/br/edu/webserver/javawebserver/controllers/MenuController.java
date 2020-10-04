@@ -2,12 +2,10 @@ package br.edu.webserver.javawebserver.controllers;
 
 import java.util.Vector;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.webserver.javawebserver.services.broker.ServicoBroker;
 import br.edu.webserver.javawebserver.services.broker.Transacao;
 
 @RestController

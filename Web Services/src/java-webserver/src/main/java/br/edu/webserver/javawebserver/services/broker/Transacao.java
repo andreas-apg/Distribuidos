@@ -33,9 +33,10 @@ public class Transacao {
 	float preco; 		// em reais
 	int quantidade; 	// número inteiro 
 	static Map<String, Usuario> mapaDeUsuarios;
-	Date hora;
-	static SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-	// A: usa-se assim> formataData.format(hora) 
+	String hora;
+	static SimpleDateFormat formataISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	// A: Date para String: formataISO8601.format(hora) 
+	// A: String para Date: formataISO8601.parse(horaString)	
 	
 	public static Vector<Transacao> transacoes = new Vector<Transacao>();
 	// A: movi as filas de compra e venda pra essa classe
@@ -48,7 +49,7 @@ public class Transacao {
 		this.acao = acao;
 		this.preco = preco;
 		this.quantidade = quantidade;
-		this.hora = new Date();
+		this.hora = Transacao.formataISO8601.format(new Date());
 	}
 	
 	public Transacao() {};
@@ -151,25 +152,32 @@ public class Transacao {
     /* A: varre a fila de venda pra ver se tem alguma
      * com mesmo código de ação da compra nova.
      */
-    private static void procuraVenda(Ordem compra) {
+    private synchronized static void procuraVenda(Ordem compra) {
 		if(filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
 			System.out.println("filaDeVendacontém " + compra.getCodigoDaAcao());
 			for(Entry<Ordem, String> venda: filaDeVenda.entrySet()) {
 	    		/* A: iterando pela lista de venda, pra ver
 	    		 * se um papel bate e se são de usuários diferentes
 	    		 */
+				System.out.println(filaDeVenda.entrySet().size())
 				System.out.println(compra.getCodigoDaAcao() + ", " + venda.getValue() + ", " + compra.getNomeDeUsuario() + ", " + venda.getKey().getNomeDeUsuario());
 	    		if(compra.getCodigoDaAcao().equals(venda.getValue()) && !compra.getNomeDeUsuario().equals(venda.getKey().getNomeDeUsuario())) {
 	    			/* A: só será feita a compra se o preço for exatamente
 	    			* igual, como o pdf diz.
 	    			*/
 	    			if(compra.getValor() == venda.getKey().getValor()) {
+						System.out.println("Compra: " + compra.getQuantidade());
+						if(compra.getQuantidade() == 0){
+							System.out.println("Acabou!");
+							return;
+						}
+						else{
 	    					try {
 								realizaCompra(compra, venda.getKey());
 							} catch (RemoteException e) {
 								System.out.println("RemoteException em procuraVenda: " + e.getMessage());
 							}
-	    					return;
+						}
 	    			}
 	    		}			    			
 	    	}
@@ -179,7 +187,7 @@ public class Transacao {
     /* A: varre a fila de compra pra ver se tem alguma
      * com mesmo código de ação da venda nova.
      */
-    private static void procuraCompra(Ordem venda) {
+    private synchronized static void procuraCompra(Ordem venda) {
 		if(filaDeCompra.containsValue(venda.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
 	    	System.out.println("filaDeCompra contém " + venda.getCodigoDaAcao());
 			for(Entry<Ordem, String> compra: filaDeCompra.entrySet()) {
