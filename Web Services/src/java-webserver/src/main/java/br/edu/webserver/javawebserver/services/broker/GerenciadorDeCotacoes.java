@@ -29,29 +29,11 @@ public class GerenciadorDeCotacoes {
     }
 
     // imprime o valor atual das cotacoes
-    public void imprimirCotacoes() throws Exception {
+    public Collection<Cotacao> getCotacoes() throws Exception {
 
         System.out.println("Imprimindo cotacoes...");
-
-        if (mapaDeCotacoes.size() == 0) {
-            System.out.println("Lista de cotacoes vazia");
-            return;
-        } else {
-            StringBuilder nomes = new StringBuilder();
-            String separador = "";
-
-            Collection<Cotacao> listaDeCotacoes = mapaDeCotacoes.values();
-
-            for (Cotacao cotacao : listaDeCotacoes) {
-
-                nomes.append(separador);
-                separador = ", ";
-                nomes.append(cotacao.getCodigoDaAcao() + ": " + cotacao.getValor());
-            }
-
-            System.out.println(nomes);
-        }
-
+        Collection<Cotacao> listaDeCotacoes = mapaDeCotacoes.values();
+        return listaDeCotacoes;
     }
 
     // Permite atualizar manualmente o valor de uma determinada acao
@@ -119,9 +101,10 @@ public class GerenciadorDeCotacoes {
         String msg = "Servidor: usuario notificado de limite de " + tipo + ": " + usuario.getNome();
         System.out.println(msg);
 
-        msg = "Limite de "+ tipo + " atingido para acao : ";
-        msg = msg + codigoDaAcao + ": " + novoValor + " x " + cotacao.getValor();
-            
+        msg = "Limite de "+ tipo + " atingido para acao : " + codigoDaAcao;
+        usuario.getFilaDeMensagens().add(msg);
+
+        msg = "Limite atual: " + cotacao.getValor() + "; cotacao: " + novoValor;
         usuario.getFilaDeMensagens().add(msg);
     
     }

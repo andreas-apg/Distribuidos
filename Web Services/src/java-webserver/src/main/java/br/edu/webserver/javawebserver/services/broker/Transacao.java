@@ -1,24 +1,18 @@
 package br.edu.webserver.javawebserver.services.broker;
 
+import java.rmi.RemoteException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import br.edu.webserver.javawebserver.models.Ordem;
 import br.edu.webserver.javawebserver.models.Usuario;
 import lombok.Data;
-
-import java.rmi.RemoteException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 /* classe para a transação de uma ação.
  * Para saber a cotação de uma ação,
@@ -387,7 +381,7 @@ public class Transacao {
     		Ordem compra = compraIterator.next();
     		if(compra.getNomeDeUsuario() == usuarioRef) {
     			// A: removendo a ordem, se pertencer ao usuario
-    			compraIterator.remove();
+				compraIterator.remove();
     		}
     	}    	
     	// A: criando iterador para filaDeVenda

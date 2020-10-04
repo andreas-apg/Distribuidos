@@ -9,6 +9,7 @@ from exceptions.server_exception import ServerException
 import threading
 import sseclient
 import pprint
+import os
 
 class ClienteHttp(Loggable,threading.Thread):
     """Classe responsavel por enviar as mensagens para o servidor de acoes"""
@@ -29,7 +30,11 @@ class ClienteHttp(Loggable,threading.Thread):
         self.username = username
 
     def run(self):
-        self.servico_de_notificacao()
+        try:
+            self.servico_de_notificacao()
+        except:
+            print("Erro ao iniciar o servico de notificao. Ou o servidor está inacessível, ou o nome de usuario ja esta em uso.")
+            os._exit(1)
 
     def servico_de_notificacao(self):
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['notificacao']
@@ -37,6 +42,9 @@ class ClienteHttp(Loggable,threading.Thread):
         print ("Iniciando servico de notificacao ")
         
         response = requests.get(request_url, params=payload, stream=True)
+        if not(response.status_code == 200 or response.status_code==201):
+            raise ServerException()
+
         client = sseclient.SSEClient(response)
         for event in client.events():
             pprint.pprint(event.data)
@@ -79,7 +87,7 @@ class ClienteHttp(Loggable,threading.Thread):
 
         try:
             # parametro do get request            
-            payload: dict = {'username':self.username}
+            payload: dict = {'nomeDeUsuario':self.username}
             
             # envio do request
             self.log_info("Enviando solicitacao de cotacoes: {}".format(payload))
@@ -90,7 +98,7 @@ class ClienteHttp(Loggable,threading.Thread):
                 raise ServerException()
             
             print("Cotacoes da lista de interesse:")
-            print(r.json)
+            print(r.json())
 
         except ValueError as tp:
             msg = "Erro ao decodificar resposta em json"
@@ -137,7 +145,7 @@ class ClienteHttp(Loggable,threading.Thread):
 
         try:
             # parametro do get request            
-            payload: dict = {'username':self.username}
+            payload: dict = {'nomeDeUsuario':self.username}
             
             # envio do request
             self.log_info("Enviando solicitacao de carteira: {}".format(payload))
@@ -148,7 +156,7 @@ class ClienteHttp(Loggable,threading.Thread):
                 raise ServerException()
             
             print("Carteira do cliente:")
-            print(r.json)
+            print(r.json())
 
         except ValueError as tp:
             msg = "Erro ao decodificar resposta em json"
@@ -168,7 +176,7 @@ class ClienteHttp(Loggable,threading.Thread):
 
         try:
             # parametro do get request            
-            payload: dict = {'username':self.username}
+            payload: dict = {'nomeDeUsuario':self.username}
             
             # envio do request
             self.log_info("Enviando solicitacao de limite: {}".format(payload))
@@ -179,7 +187,7 @@ class ClienteHttp(Loggable,threading.Thread):
                 raise ServerException()
             
             print("Limites do cliente:")
-            print(r.json)
+            print(r.json())
 
         except ValueError as tp:
             msg = "Erro ao decodificar resposta em json"

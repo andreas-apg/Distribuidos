@@ -18,7 +18,6 @@ import br.edu.webserver.javawebserver.models.Usuario;
 public class ServicoBroker {
 
 	private Map<String, Usuario> mapaDeUsuarios;
-	private Transacao transacao;
 	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
 	private GerenciadorDeInteresses gerenciadorDeInteresses;
 	private GerenciadorDeLimites gerenciadorDeLimites;
@@ -29,7 +28,7 @@ public class ServicoBroker {
 	public ServicoBroker() {
 		System.out.println("Servico Broker executando");
 		mapaDeUsuarios = new Hashtable<String, Usuario>();
-		transacao = new Transacao(mapaDeUsuarios);
+		Transacao.mapaDeUsuarios = mapaDeUsuarios;
 		gerenciadorDeCotacoes = new GerenciadorDeCotacoes(mapaDeUsuarios);
 		gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
 		gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios,gerenciadorDeCotacoes);
@@ -39,7 +38,10 @@ public class ServicoBroker {
 		return gerenciadorDeCotacoes;
 	}
 
-	public void registrarNovoCliente(String nomeDeUsuario) {
+	public void registrarNovoCliente(String nomeDeUsuario) throws Exception {
+		if(mapaDeUsuarios.containsKey(nomeDeUsuario) == true){
+			throw new Exception("Usuario existente.");
+		}
 		System.out.printf("usuário %s se conectou!\n", nomeDeUsuario);
 		Usuario novoUsuario = new Usuario(nomeDeUsuario);
 		mapaDeUsuarios.put(nomeDeUsuario, novoUsuario);

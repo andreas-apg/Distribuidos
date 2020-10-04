@@ -61,15 +61,14 @@ public class GerenciadorDeLimites {
             gerenciadorDeCotacoes.obterCotacao(codigoDaAcao);
 
             Cotacao cotacao = new Cotacao(limite.getCodigoDaAcao(), limite.getValor());
-
-            // TODO: 
+            
             if (!mapaDeLimite.containsKey(codigoDaAcao)) {
                 mapaDeLimite.put(codigoDaAcao, cotacao);
                 msg = "Adicionado " + codigoDaAcao + " a lista de limite";
             } 
             else {
-                
-                msg = "Cotacao ja estava na lista de limite: " + codigoDaAcao;
+                mapaDeLimite.get(codigoDaAcao).setValor(limite.getValor());
+                msg = "Limite para " + codigoDaAcao + " atualizado: " + limite.getValor();
             }
             
         } 

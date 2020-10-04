@@ -1,5 +1,5 @@
 import logging, sys
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from loggable import Loggable
 from models.enums import *
 
@@ -8,22 +8,27 @@ class Helpers(Loggable):
 
     def obter_prazo(self) -> str:
         """ Obtem um prazo valido do usuario no formato de data "dd-MM-yyyy_HH:mm:ss" """
+        delta: datetime.timedelta
         while True: 
             user_input=input("Digite o prazo de validade da ordem como 'hh:mm:ss' (Default: 00:05:00): ") 
             
             if user_input =='':
-                return '00:05:00'
+                user_input = '00:05:00'
+                delta = timedelta(minutes=5)
+                break
             else:
                 try:
-                    time.fromisoformat(user_input)
+                    t = datetime.strptime(user_input, "%H:%M:%S")
+                    delta = timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)                    
                 except ValueError as err:
                     print("Prazo invalido, tente novamente")
                     continue
                 except:
                     self.log_error(msg= "Erro obter prazo do usuario")
                     raise
-                return user_input
-
+                break
+        prazo = datetime.now() + delta
+        return datetime.isoformat(prazo.replace(microsecond=0))
 
     def obter_quantidade(self) -> int:
         """ Obtem um numero inteiro do usuario """
@@ -107,7 +112,7 @@ class Helpers(Loggable):
                 except:
                     self.log_error(msg="Erro ao obter tipo da ordem")
                     raise
-                return tipo
+                return user_input
     
     def obter_tipo_da_atualizacao(self) -> str:
         """ Obtem uma string representando o codigo de uma acao """
