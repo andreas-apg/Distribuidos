@@ -13,21 +13,14 @@ import br.edu.webserver.javawebserver.models.Usuario;
 public class ServicoBroker {
 
 	private Map<String, Usuario> mapaDeUsuarios;
-	private Transacao transacao;
-	// private GerenciadorDeCotacoes gerenciadorDeCotacoes;
-	// private GerenciadorDeInteresses gerenciadorDeInteresses;
-    // private GerenciadorDeLimites gerenciadorDeLimites;
-    
-    // Classe de inicio do servidor
-    // Inicializa o servidor e o menu
+	
+	// Classe de inicio do servidor
+	// Inicializa o servidor e o menu
 
-	public ServicoBroker(){
+	public ServicoBroker() {
 		System.out.println("Servico Broker executando");
 		mapaDeUsuarios = new Hashtable<String, Usuario>();
-		transacao = new Transacao(mapaDeUsuarios);
-		// gerenciadorDeCotacoes = new GerenciadorDeCotacoes(mapaDeUsuarios);
-		// gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
-		// gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios, gerenciadorDeCotacoes);
+		new Transacao(mapaDeUsuarios);
 	}
 
 	// public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {
