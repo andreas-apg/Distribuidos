@@ -4,9 +4,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import br.edu.webserver.javawebserver.models.Ordem;
 import br.edu.webserver.javawebserver.models.Usuario;
@@ -153,13 +157,24 @@ public class Transacao {
      * com mesmo código de ação da compra nova.
      */
     private synchronized static void procuraVenda(Ordem compra) {
+		
+		// TODO: use predicates to refactor
+		// Predicate<Ordem> mesmaAcao = ordem -> ordem.getCodigoDaAcao().equals(compra.getCodigoDaAcao());
+		// Predicate<Ordem> mesmoPreco = ordem -> ordem.getValor() == compra.getValor();
+		// Predicate<Ordem> usuarioDiferente = ordem -> ordem.getNomeDeUsuario().equals(compra.getNomeDeUsuario());
+
+		// Predicate<Ordem> match = mesmaAcao.and(mesmoPreco).and(usuarioDiferente);
+		// Alternativa:
+		// List<Ordem> listaDeMatchs = filaDeVenda.keySet().stream().filter(match).collect(Collectors.toList());
+		
+		
 		if(filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
 			System.out.println("filaDeVendacontém " + compra.getCodigoDaAcao());
 			for(Entry<Ordem, String> venda: filaDeVenda.entrySet()) {
 	    		/* A: iterando pela lista de venda, pra ver
 	    		 * se um papel bate e se são de usuários diferentes
 	    		 */
-				System.out.println(filaDeVenda.entrySet().size())
+				System.out.println(filaDeVenda.entrySet().size());
 				System.out.println(compra.getCodigoDaAcao() + ", " + venda.getValue() + ", " + compra.getNomeDeUsuario() + ", " + venda.getKey().getNomeDeUsuario());
 	    		if(compra.getCodigoDaAcao().equals(venda.getValue()) && !compra.getNomeDeUsuario().equals(venda.getKey().getNomeDeUsuario())) {
 	    			/* A: só será feita a compra se o preço for exatamente

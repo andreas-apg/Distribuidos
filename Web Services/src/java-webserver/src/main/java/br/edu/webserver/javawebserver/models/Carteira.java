@@ -3,7 +3,10 @@ package br.edu.webserver.javawebserver.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Data;
+
 // Classe utilizada no Usuario para armazenar as acoes que ele possui
+@Data
 public class Carteira {
     
     private Map<String, Integer> listaDeAcoes ;
