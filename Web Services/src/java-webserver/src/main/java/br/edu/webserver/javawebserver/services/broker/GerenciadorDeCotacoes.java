@@ -116,13 +116,13 @@ public class GerenciadorDeCotacoes {
     // metodo utilizado pra notificar o usuario quando um dos seus limites foi excedido
     private void notificarUsuario(String codigoDaAcao, Float novoValor, Usuario usuario,
         Cotacao cotacao, String tipo) {
+        String msg = "Servidor: usuario notificado de limite de " + tipo + ": " + usuario.getNome();
+        System.out.println(msg);
 
-        String msg = "Limite de "+ tipo + " atingido para acao : ";
+        msg = "Limite de "+ tipo + " atingido para acao : ";
         msg = msg + codigoDaAcao + ": " + novoValor + " x " + cotacao.getValor();
             
         usuario.getFilaDeMensagens().add(msg);
-        msg = "Servidor: usuario notificado de limite de " + tipo + ": " + usuario.getNome();
-        System.out.println(msg);
     
     }
     

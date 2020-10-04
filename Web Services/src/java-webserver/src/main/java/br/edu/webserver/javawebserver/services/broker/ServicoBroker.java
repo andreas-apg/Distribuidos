@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.edu.webserver.javawebserver.models.Carteira;
 import br.edu.webserver.javawebserver.models.Cotacao;
 import br.edu.webserver.javawebserver.models.Interesse;
+import br.edu.webserver.javawebserver.models.Limite;
 import br.edu.webserver.javawebserver.models.Ordem;
 import br.edu.webserver.javawebserver.models.Usuario;
 
@@ -20,7 +21,7 @@ public class ServicoBroker {
 	private Transacao transacao;
 	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
 	private GerenciadorDeInteresses gerenciadorDeInteresses;
-	// private GerenciadorDeLimites gerenciadorDeLimites;
+	private GerenciadorDeLimites gerenciadorDeLimites;
 
 	// Classe de inicio do servidor
 	// Inicializa o servidor e o menu
@@ -31,13 +32,12 @@ public class ServicoBroker {
 		transacao = new Transacao(mapaDeUsuarios);
 		gerenciadorDeCotacoes = new GerenciadorDeCotacoes(mapaDeUsuarios);
 		gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
-		// gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios,
-		// gerenciadorDeCotacoes);
+		gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios,gerenciadorDeCotacoes);
 	}
 
-	// public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {
-	// return gerenciadorDeCotacoes;
-	// }
+	public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {
+		return gerenciadorDeCotacoes;
+	}
 
 	public void registrarNovoCliente(String nomeDeUsuario) {
 		System.out.printf("usuário %s se conectou!\n", nomeDeUsuario);
@@ -91,12 +91,13 @@ public class ServicoBroker {
 		return mapaDeUsuarios.get(nomeDeUsuario).getFilaDeMensagens();
 	}
 
-	public void atualizarListaDeInteresse(Interesse interesse) {
+	public void atualizarListaDeInteresse(Interesse interesse) throws Exception {
 		try {
 			gerenciadorDeInteresses.atualizarListaDeInteresse(interesse);
 		} catch (Exception e) {
 			System.out.println("Servidor: erro ao atualizar lista de interesse");
 			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -113,23 +114,21 @@ public class ServicoBroker {
 		
 	}
 
-	// @Override
-	// public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {
-	// 	String limites = gerenciadorDeLimites.obterListasDeLimiteComoString(referenciaCliente);
-	// 	referenciaCliente.notificar(limites);
-	// }
+	// Retorna um mapa com os limites de perda e ganho do usuario
+	public Map<String, Map<String, Cotacao>> obterListaDeLimite(String referenciaCliente) {
+		Map<String, Map<String, Cotacao>> limites = gerenciadorDeLimites.obterListaDeLimite(referenciaCliente);
+		return limites;
+	}
 
-	// @Override
-	// public void atualizarListaDeLimite(Limite limite) throws RemoteException {
-	// 	try {
-	// 		gerenciadorDeLimites.atualizarListaDeLimite(limite);
-	// 	} catch (Exception e) {
-	// 		limite.getReferenciaCliente().notificar("Erro ao atualizar lista de limite");
-	// 		System.out.println("Erro ao atualizar lista de limite");
-	// 		e.printStackTrace();
-	// 	}
+	public void atualizarListaDeLimite(Limite limite) throws Exception{
+		try {
+			gerenciadorDeLimites.atualizarListaDeLimite(limite);
+		} catch (Exception e) {
+			System.out.println("Erro ao atualizar lista de limite");
+			throw e;
+		}
 
-	// }
+	}
 
 	// public void imprimirUsuarios() {
 	// 	System.out.println("Servidor: Imprimindo lista de usuarios...");
