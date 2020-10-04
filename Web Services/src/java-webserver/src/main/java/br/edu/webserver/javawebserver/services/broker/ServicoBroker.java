@@ -1,11 +1,16 @@
 package br.edu.webserver.javawebserver.services.broker;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.webserver.javawebserver.models.Carteira;
+import br.edu.webserver.javawebserver.models.Cotacao;
+import br.edu.webserver.javawebserver.models.Interesse;
+import br.edu.webserver.javawebserver.models.Limite;
 import br.edu.webserver.javawebserver.models.Ordem;
 import br.edu.webserver.javawebserver.models.Usuario;
 
@@ -13,19 +18,26 @@ import br.edu.webserver.javawebserver.models.Usuario;
 public class ServicoBroker {
 
 	private Map<String, Usuario> mapaDeUsuarios;
-	
+	private Transacao transacao;
+	private GerenciadorDeCotacoes gerenciadorDeCotacoes;
+	private GerenciadorDeInteresses gerenciadorDeInteresses;
+	private GerenciadorDeLimites gerenciadorDeLimites;
+
 	// Classe de inicio do servidor
 	// Inicializa o servidor e o menu
 
 	public ServicoBroker() {
 		System.out.println("Servico Broker executando");
 		mapaDeUsuarios = new Hashtable<String, Usuario>();
-		new Transacao(mapaDeUsuarios);
+		transacao = new Transacao(mapaDeUsuarios);
+		gerenciadorDeCotacoes = new GerenciadorDeCotacoes(mapaDeUsuarios);
+		gerenciadorDeInteresses = new GerenciadorDeInteresses(mapaDeUsuarios, gerenciadorDeCotacoes);
+		gerenciadorDeLimites = new GerenciadorDeLimites(mapaDeUsuarios,gerenciadorDeCotacoes);
 	}
 
-	// public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {
-	// 	return gerenciadorDeCotacoes;
-	// }
+	public GerenciadorDeCotacoes getGerenciadorDeCotacoes() {
+		return gerenciadorDeCotacoes;
+	}
 
 	public void registrarNovoCliente(String nomeDeUsuario) {
 		System.out.printf("usuário %s se conectou!\n", nomeDeUsuario);
@@ -46,10 +58,11 @@ public class ServicoBroker {
 
 		// adiciona a notificacao na fila de msgs
 		usuario.getFilaDeMensagens().add(msg);
-		
+
 	}
+
 	public void registrarOrdem(Ordem ordem) {
-		
+
 		notificaUsuario(ordem.getNomeDeUsuario(), "Servidor recebeu a ordem.");
 
 		/*
@@ -58,66 +71,61 @@ public class ServicoBroker {
 		 */
 		if (ordem.getTipoDaOrdem().equals("compra")) {
 			Transacao.adicionaCompra(ordem);
-			
+
 			notificaUsuario(ordem.getNomeDeUsuario(), "Ordem de compra registrada!");
 
 		} else if (ordem.getTipoDaOrdem().equals("venda")) {
 			Transacao.adicionaVenda(ordem);
 
 			notificaUsuario(ordem.getNomeDeUsuario(), "Ordem de venda registrada!");
-			
-        }
-        System.out.println(ordem.toString());
+
+		}
+		System.out.println(ordem.toString());
 	}
 
 	// Retorna o vetor de mensagens para o determinado usuario
 	public Vector<String> getMensagensDoUsuario(String nomeDeUsuario) {
 		return mapaDeUsuarios.get(nomeDeUsuario).getFilaDeMensagens();
-	}	
+	}
 
-	// @Override
-	// public void atualizarListaDeInteresse(Interesse interesse) throws RemoteException {
-	// 	try {
-	// 		gerenciadorDeInteresses.atualizarListaDeInteresse(interesse);
-	// 	} catch (Exception e) {
-	// 		System.out.println("Servidor: erro ao atualizar lista de interesse");
-	// 		e.printStackTrace();
-	// 	}
-	// }
+	public void atualizarListaDeInteresse(Interesse interesse) throws Exception {
+		try {
+			gerenciadorDeInteresses.atualizarListaDeInteresse(interesse);
+		} catch (Exception e) {
+			System.out.println("Servidor: erro ao atualizar lista de interesse");
+			e.printStackTrace();
+			throw e;
+		}
+	}
 
-	// @Override
-	// public void obterCotacoesDaListaDeInteresse(InterfaceCli referenciaCliente) throws RemoteException {
-	// 	gerenciadorDeInteresses.obterCotacoesDaListaDeInteresse(referenciaCliente);
+	public List<Cotacao> obterCotacoesDaListaDeInteresse(String referenciaCliente) {
+		return gerenciadorDeInteresses.obterCotacoesDaListaDeInteresse(referenciaCliente);
+	}
 
-	// }
+	public Carteira obterCarteira(String nomeDeUsuario) {
+		Usuario usuario = mapaDeUsuarios.get(nomeDeUsuario);
+		Carteira carteira = usuario.getCarteira();
+		String msg = "Servidor: imprimindo carteira do usuario: " + usuario.getNome();
+		System.out.println(msg);
+		return carteira;
+		
+	}
 
-	// @Override
-	// public void obterCarteira(InterfaceCli referenciaCliente) throws RemoteException {
-	// 	Usuario usuario = mapaDeUsuarios.get(referenciaCliente);
-	// 	Carteira carteira = usuario.getCarteira();
-	// 	String msg = "Servidor: imprimindo carteira do usuario: " + usuario.getNome();
-	// 	System.out.println(msg);
-	// 	referenciaCliente.notificar(carteira.obterCarteiraComoString());
+	// Retorna um mapa com os limites de perda e ganho do usuario
+	public Map<String, Map<String, Cotacao>> obterListaDeLimite(String referenciaCliente) {
+		Map<String, Map<String, Cotacao>> limites = gerenciadorDeLimites.obterListaDeLimite(referenciaCliente);
+		return limites;
+	}
 
-	// }
+	public void atualizarListaDeLimite(Limite limite) throws Exception{
+		try {
+			gerenciadorDeLimites.atualizarListaDeLimite(limite);
+		} catch (Exception e) {
+			System.out.println("Erro ao atualizar lista de limite");
+			throw e;
+		}
 
-	// @Override
-	// public void obterListaDeLimite(InterfaceCli referenciaCliente) throws RemoteException {
-	// 	String limites = gerenciadorDeLimites.obterListasDeLimiteComoString(referenciaCliente);
-	// 	referenciaCliente.notificar(limites);
-	// }
-
-	// @Override
-	// public void atualizarListaDeLimite(Limite limite) throws RemoteException {
-	// 	try {
-	// 		gerenciadorDeLimites.atualizarListaDeLimite(limite);
-	// 	} catch (Exception e) {
-	// 		limite.getReferenciaCliente().notificar("Erro ao atualizar lista de limite");
-	// 		System.out.println("Erro ao atualizar lista de limite");
-	// 		e.printStackTrace();
-	// 	}
-
-	// }
+	}
 
 	// public void imprimirUsuarios() {
 	// 	System.out.println("Servidor: Imprimindo lista de usuarios...");

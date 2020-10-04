@@ -4,9 +4,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import br.edu.webserver.javawebserver.models.Ordem;
 import br.edu.webserver.javawebserver.models.Usuario;
@@ -73,13 +77,12 @@ public class Transacao {
 		Usuario usuario = mapaDeUsuarios.get(referenciaUsuario);
 		usuario.getListaDeInteresse().add(codigoDaAcao);
 	}
-
-	/*
-	 * A: varre a fila de venda pra ver se tem alguma com mesmo código de ação da
-	 * compra nova.
-	 */
-	private synchronized static void procuraVenda(Ordem compra) {
-		if (filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
+    
+    /* A: varre a fila de venda pra ver se tem alguma
+     * com mesmo código de ação da compra nova.
+     */
+    private synchronized static void procuraVenda(Ordem compra) {
+		if(filaDeVenda.containsValue(compra.getCodigoDaAcao()) == true) { // pode ser null, por isso da comparaçao
 			Transacao transacao;
 			String agora = Transacao.formataISO8601.format(new Date());
 			System.out.println("filaDeVendacontém " + compra.getCodigoDaAcao());

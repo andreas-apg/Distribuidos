@@ -120,17 +120,6 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "interesses",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
 					"raw": "http://localhost:8080/api/carteira?nomeDeUsuario=joao",
 					"protocol": "http",
 					"host": [
@@ -152,13 +141,39 @@
 			"response": []
 		},
 		{
+			"name": "interesses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/interesses?nomeDeUsuario=joao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"interesses"
+					],
+					"query": [
+						{
+							"key": "nomeDeUsuario",
+							"value": "joao"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "inserir interesse",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nomeDeUsuario\": \"joao\",\n    \"codigoDaAcao\": \"azul4\",\n    \"tipoDaAtualizacao\": \"inserir\"\n}",
+					"raw": "{\n    \"nomeDeUsuario\": \"joao\",\n    \"codigoDaAcao\": \"petr4\",\n    \"tipoDaAtualizacao\": \"inserir\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -204,6 +219,90 @@
 					"path": [
 						"api",
 						"interesses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "limites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/limites?nomeDeUsuario=joao",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"limites"
+					],
+					"query": [
+						{
+							"key": "nomeDeUsuario",
+							"value": "joao"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remover limite",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nomeDeUsuario\": \"joao\",\n    \"codigoDaAcao\": \"AZUL4\",\n    \"tipoDaAtualizacao\": \"remover\",\n    \"tipoDoLimite\": \"ganho\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/limites",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"limites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "inserir limite",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nomeDeUsuario\": \"joao\",\n    \"codigoDaAcao\": \"AZUL4\",\n    \"tipoDaAtualizacao\": \"inserir\",\n    \"tipoDoLimite\": \"perda\",\n    \"valor\": \"valor\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/limites",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"limites"
 					]
 				}
 			},

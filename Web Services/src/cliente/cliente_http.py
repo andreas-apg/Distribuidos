@@ -18,7 +18,6 @@ class ClienteHttp(Loggable,threading.Thread):
     server_endpoints: dict = {
         "notificacao": "events/notificacao",
         "ordem": "api/ordem",
-        "cotacoes": "api/cotacoes",
         "interesses": "api/interesses",
         "carteira": "api/carteira",
         "limites": "api/limites"
@@ -141,7 +140,7 @@ class ClienteHttp(Loggable,threading.Thread):
             payload: dict = {'username':self.username}
             
             # envio do request
-            self.log_info("Enviando solicitacao de cotacoes: {}".format(payload))
+            self.log_info("Enviando solicitacao de carteira: {}".format(payload))
             r = requests.get(request_url, params=payload)
 
             # gera excessao se a respota nao foi ok
@@ -172,7 +171,7 @@ class ClienteHttp(Loggable,threading.Thread):
             payload: dict = {'username':self.username}
             
             # envio do request
-            self.log_info("Enviando solicitacao de cotacoes: {}".format(payload))
+            self.log_info("Enviando solicitacao de limite: {}".format(payload))
             r = requests.get(request_url, params=payload)
 
             # gera excessao se a respota nao foi ok
