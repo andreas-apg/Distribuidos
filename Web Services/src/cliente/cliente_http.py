@@ -47,7 +47,8 @@ class ClienteHttp(Loggable,threading.Thread):
 
         client = sseclient.SSEClient(response)
         for event in client.events():
-            pprint.pprint(event.data)
+            if(event.data != "-1"):
+                pprint.pprint(event.data)
         print ("Encerrando servico de notificacao")
     
 
@@ -55,7 +56,7 @@ class ClienteHttp(Loggable,threading.Thread):
         """Envia uma ordem de compra e venda ao Servidor por http """
 
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['ordem']
-
+        r = 0
         # tenta enviar a ordem para o servidor por http request
         try:
             # converte o dto python em json
@@ -84,7 +85,7 @@ class ClienteHttp(Loggable,threading.Thread):
             respectivas cotacoes """
 
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['interesses']
-
+        r = 0
         try:
             # parametro do get request            
             payload: dict = {'nomeDeUsuario':self.username}
@@ -115,7 +116,7 @@ class ClienteHttp(Loggable,threading.Thread):
         """ Envia um novo interesse em cotacao do Cliente ao Servidor por http """
         
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['interesses']
-
+        r = 0
         try:
             # converte o dto python em json
             payload = json.dumps(asdict(interesse))
@@ -142,7 +143,7 @@ class ClienteHttp(Loggable,threading.Thread):
     def obter_carteira(self):
         """ Envia um request para obter as acoes que usuario possui na carteira """
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['carteira']
-
+        r = 0
         try:
             # parametro do get request            
             payload: dict = {'nomeDeUsuario':self.username}
@@ -173,7 +174,7 @@ class ClienteHttp(Loggable,threading.Thread):
         """ Envia um request para obter a lista de limite de perca e ganho do usuario """
 
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['limites']
-
+        r = 0
         try:
             # parametro do get request            
             payload: dict = {'nomeDeUsuario':self.username}
@@ -203,7 +204,7 @@ class ClienteHttp(Loggable,threading.Thread):
         """ Envia um novo limite de ganho ou perda do cliente ao Servidor por http """
         
         request_url: str = ClienteHttp.server_url + ClienteHttp.server_endpoints['limites']
-
+        r = 0
         try:
             # converte o dto python em json
             payload = json.dumps(asdict(limite))

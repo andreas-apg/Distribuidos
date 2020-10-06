@@ -7,6 +7,7 @@ from loggable import Loggable
 from models.ordem import Ordem
 from models.interesse import Interesse
 from cliente_http import ClienteHttp
+import os
 
 
 class MenuCliente(Loggable):
@@ -88,7 +89,7 @@ class MenuCliente(Loggable):
                     self.log_error("Nao foi possivel enviar novo limite", exc=sys.exc_info()[0])                                            
 
             elif selection == '0': 
-                sys.exit(0)
+                os._exit(1)
                 break
             else: 
                 print ("Opcao invalida")

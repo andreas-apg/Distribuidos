@@ -51,8 +51,7 @@ public class SSEController {
                             String msgAtual = msgs.remove(0);
                             emitter.send("Server: " + msgAtual);
                         }
-
-                        // emitter.send("");
+                        emitter.send("-1");
                     }
                 } catch (Exception e) {
                     emitter.completeWithError(e);
